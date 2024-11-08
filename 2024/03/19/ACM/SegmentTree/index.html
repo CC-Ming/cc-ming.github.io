@@ -19,15 +19,15 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":false,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="线段树 基础知识 以查询区间最大值为例： 由分治的思想可知：区间 \([L,R]\) 的最大值等于 \(\max([L, M], [M + 1, R])\) 在区间 \([1,n]\) 上建线段树，以区间 \([1, 10]\) 为例，如图：  其中每一个节点里存的都是该节点管辖区间内（黄色区域）的最小值，图中共有 \(2n-1 &#x3D; 19\) 个节点  build (静态开点">
+    <meta name="description" content="线段树 基础知识 以查询区间最大值为例： 由分治的思想可知：区间 \([L,R]\) 的最大值等于 \(\max([L, M], [M + 1, R])\) 在区间 \([1,n]\) 上建线段树，以区间 \([1, 10]\) 为例，如图：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线段树">
 <meta property="og:url" content="http://example.com/2024/03/19/ACM/SegmentTree/index.html">
 <meta property="og:site_name" content="CMingの小站">
-<meta property="og:description" content="线段树 基础知识 以查询区间最大值为例： 由分治的思想可知：区间 \([L,R]\) 的最大值等于 \(\max([L, M], [M + 1, R])\) 在区间 \([1,n]\) 上建线段树，以区间 \([1, 10]\) 为例，如图：  其中每一个节点里存的都是该节点管辖区间内（黄色区域）的最小值，图中共有 \(2n-1 &#x3D; 19\) 个节点  build (静态开点">
+<meta property="og:description" content="线段树 基础知识 以查询区间最大值为例： 由分治的思想可知：区间 \([L,R]\) 的最大值等于 \(\max([L, M], [M + 1, R])\) 在区间 \([1,n]\) 上建线段树，以区间 \([1, 10]\) 为例，如图：">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-19T12:08:00.000Z">
-<meta property="article:modified_time" content="2024-11-08T18:24:06.632Z">
+<meta property="article:modified_time" content="2024-11-08T18:46:21.468Z">
 <meta property="article:author" content="CMing">
 <meta name="twitter:card" content="summary">
 
@@ -194,7 +194,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2024-11-09 02:24:06" itemprop="dateModified" datetime="2024-11-09T02:24:06+08:00">2024-11-09</time>
+      <time title="Modified: 2024-11-09 02:46:21" itemprop="dateModified" datetime="2024-11-09T02:46:21+08:00">2024-11-09</time>
     </span>
 
   
@@ -213,8 +213,8 @@
 的最大值等于 <span class="math inline">\(\max([L, M], [M + 1,
 R])\)</span><br />
 在区间 <span class="math inline">\([1,n]\)</span> 上建线段树，以区间
-<span class="math inline">\([1, 10]\)</span> 为例，如图：</p>
-<p><img
+<span class="math inline">\([1, 10]\)</span> 为例，如图： <span id="more"></span>
+<img
 src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/d1e8050cc188e3bb6057d2f1062687e2.jpg" /></p>
 <p>其中每一个节点里存的都是该节点管辖区间内（黄色区域）的最小值，图中共有
 <span class="math inline">\(2n-1 = 19\)</span> 个节点 <!-- 
