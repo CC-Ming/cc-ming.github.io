@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/cm.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/cm.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":false,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="邻接表 建无向图的时候，add(a,b), add(b,a) ，所以每条边都是成对的，即编号 \((0,1)、(2,3)、(4,5) \dots\) 是一组 （正向边，反向边）, 所以如果 \(i\) 是正向边，那么它的反向边就是 \(i \oplus 1\) 12345int h[N], e[M], w[M], ne[M], idx;void add(int a, int b, in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graph">
+<meta property="og:url" content="http://example.com/2024/05/14/ACM/graph/index.html">
+<meta property="og:site_name" content="CMingの小站">
+<meta property="og:description" content="邻接表 建无向图的时候，add(a,b), add(b,a) ，所以每条边都是成对的，即编号 \((0,1)、(2,3)、(4,5) \dots\) 是一组 （正向边，反向边）, 所以如果 \(i\) 是正向边，那么它的反向边就是 \(i \oplus 1\) 12345int h[N], e[M], w[M], ne[M], idx;void add(int a, int b, in">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-14T03:28:00.000Z">
+<meta property="article:modified_time" content="2024-10-08T13:39:09.161Z">
+<meta property="article:author" content="CMing">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/05/14/ACM/graph/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/05/14/ACM/graph/","path":"2024/05/14/ACM/graph/","title":"graph"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>graph | CMingの小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">CMingの小站</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%BB%E6%8E%A5%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">邻接表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E7%9F%AD%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">最短路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E9%97%AD%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">传递闭包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91"><span class="nav-number">4.</span> <span class="nav-text">最小生成树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B4%9F%E7%8E%AF"><span class="nav-number">5.</span> <span class="nav-text">负环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%AE%E5%88%86%E7%BA%A6%E6%9D%9F"><span class="nav-number">6.</span> <span class="nav-text">差分约束</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E6%98%8E%E8%B4%9F%E7%8E%AF%E6%97%A0%E8%A7%A3"><span class="nav-number">6.1.</span> <span class="nav-text">证明负环无解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%82%E6%9C%80%E5%80%BC"><span class="nav-number">6.2.</span> <span class="nav-text">求最值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="nav-number">6.2.1.</span> <span class="nav-text">最大值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E5%80%BC"><span class="nav-number">6.2.2.</span> <span class="nav-text">最小值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%81%9A%E6%B3%95%E6%80%BB%E7%BB%93"><span class="nav-number">6.3.</span> <span class="nav-text">做法总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F"><span class="nav-number">7.</span> <span class="nav-text">连通分量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%AE%9A%E4%B9%89"><span class="nav-number">7.1.</span> <span class="nav-text">一些定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E7%BB%93%E8%AE%BA"><span class="nav-number">7.2.</span> <span class="nav-text">一些结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E5%90%91%E5%9B%BE%E7%9A%84%E5%BC%BA%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F"><span class="nav-number">7.3.</span> <span class="nav-text">有向图的强连通分量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%90%91%E5%9B%BE%E7%9A%84%E8%BE%B9%E5%8F%8C%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F"><span class="nav-number">7.4.</span> <span class="nav-text">无向图的边双连通分量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%90%91%E5%9B%BE%E7%9A%84%E7%82%B9%E5%8F%8C%E8%BF%9E%E9%80%9A%E5%88%86%E9%87%8F"><span class="nav-number">7.5.</span> <span class="nav-text">无向图的点双连通分量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lca"><span class="nav-number">8.</span> <span class="nav-text">LCA</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%80%8D%E5%A2%9Elca"><span class="nav-number">8.1.</span> <span class="nav-text">倍增LCA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A6%BB%E7%BA%BFlca-on-m"><span class="nav-number">8.2.</span> <span class="nav-text">离线LCA， \(O(n +
+m)\)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E5%9B%BE"><span class="nav-number">9.</span> <span class="nav-text">二分图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E6%9C%AF%E8%AF%AD"><span class="nav-number">9.1.</span> <span class="nav-text">前置术语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E5%9B%BE-1"><span class="nav-number">9.2.</span> <span class="nav-text">二分图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95"><span class="nav-number">9.3.</span> <span class="nav-text">匈牙利算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AC%A7%E6%8B%89%E8%B7%AF%E5%BE%84%E5%9B%9E%E8%B7%AF"><span class="nav-number">10.</span> <span class="nav-text">欧拉路径&#x2F;回路</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">CMing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CC-Ming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CC-Ming" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/14/ACM/graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CMing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="graph | CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          graph
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-05-14 11:28:00" itemprop="dateCreated datePublished" datetime="2024-05-14T11:28:00+08:00">2024-05-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-08 21:39:09" itemprop="dateModified" datetime="2024-10-08T21:39:09+08:00">2024-10-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="邻接表">邻接表</h1>
+<p>建无向图的时候，<code>add(a,b), add(b,a)</code>
+，所以每条边都是成对的，即编号 <span
+class="math inline">\((0,1)、(2,3)、(4,5) \dots\)</span> 是一组
+（正向边，反向边）, 所以如果 <span class="math inline">\(i\)</span>
+是正向边，那么它的反向边就是 <span class="math inline">\(i \oplus
+1\)</span></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> h[N], e[M], w[M], ne[M], idx;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    e[idx] = b, w[idx] = c, ne[idx] = h[a], h[a] = idx ++ ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<h1 id="最短路">最短路</h1>
+<p><a target="_blank" rel="noopener" href="https://oi-wiki.org/graph/shortest-path/">参考oiwiki</a></p>
+<h1 id="传递闭包">传递闭包</h1>
+<p>若 <span class="math inline">\(a \rightarrow b \rightarrow c\)</span>
+则连接一条 <span class="math inline">\(a \rightarrow c\)</span>
+的边，即：将所有间接可以到达的点，都用一条直接的边相连起来
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">floyd</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k = <span class="number">0</span>; k &lt; n; k ++)</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; j++)</span><br><span class="line">                d[i][j] |= d[i][k] &amp;&amp; d[k][j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a, b;</span><br><span class="line">cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">d[a][b] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> x = <span class="number">0</span>; x &lt; n; x++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(d[x][a]) d[x][b] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(d[b][x]) d[a][x] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> y = <span class="number">0</span>; y &lt; n; y++)</span><br><span class="line">        <span class="keyword">if</span>(d[x][a] &amp;&amp; d[b][y]) d[x][y] = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="最小生成树">最小生成树</h1>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">kruskal</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">sort</span>(edge.<span class="built_in">begin</span>(), edge.<span class="built_in">end</span>());</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) p[i] = i;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; edge.<span class="built_in">size</span>(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> a = edge[i].a, b = edge[i].b, w = edge[i].w;</span><br><span class="line">        <span class="type">int</span> ra = <span class="built_in">find</span>(a), rb = <span class="built_in">find</span>(b);</span><br><span class="line">        <span class="keyword">if</span>(ra != rb)</span><br><span class="line">        &#123;</span><br><span class="line">            p[ra] = rb;</span><br><span class="line">            edge[i].is = <span class="literal">true</span>;</span><br><span class="line">            sum += w;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="负环">负环</h1>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">spfa</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(dist, <span class="number">0</span>, <span class="keyword">sizeof</span> dist);</span><br><span class="line">    <span class="built_in">memset</span>(st, <span class="number">0</span>, <span class="keyword">sizeof</span> st);</span><br><span class="line">    <span class="built_in">memset</span>(cnt, <span class="number">0</span>, <span class="keyword">sizeof</span> cnt);</span><br><span class="line">    queue&lt;<span class="type">int</span>&gt; q;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) q.<span class="built_in">push</span>(i), st[i] = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span>(q.<span class="built_in">size</span>())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> t = q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        st[t] = <span class="literal">false</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = h[t]; i != <span class="number">-1</span>; i = ne[i])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> j = e[i];</span><br><span class="line">            <span class="keyword">if</span>(dist[j] &gt; dist[t] + w[i])</span><br><span class="line">            &#123;</span><br><span class="line">                dist[j] = dist[t] + w[i];</span><br><span class="line">                cnt[j] = cnt[t] + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(cnt[j] &gt;= n) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">if</span>(!st[j])</span><br><span class="line">                &#123;</span><br><span class="line">                    q.<span class="built_in">push</span>(j);</span><br><span class="line">                    st[j] = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="差分约束">差分约束</h1>
+<p>最短路的松弛操作： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(dist[j] &gt; dist[t] + w[i])</span><br><span class="line">    dist[j] = dist[t] + w[i];</span><br></pre></td></tr></table></figure> 所以，当求解完最短路后，设 <span
+class="math inline">\(A(i,j)\)</span> ：点 <span
+class="math inline">\(i\)</span> 和 点 <span
+class="math inline">\(j\)</span> 之间有一条从 <span
+class="math inline">\(i\)</span> 指向 <span
+class="math inline">\(j\)</span> 的有向边，则满足：<span
+class="math inline">\((\forall i) (\forall j)(A(j, i) \rightarrow
+(dist[i] \le dist[j] + w[j][i]))\)</span></p>
+<p>对于一组不等式： <span class="math inline">\(x_i \le x_j +
+c_k\)</span> 其中 <span class="math inline">\(c\)</span>
+是常数，若我们对每一个不等式都从点 <span
+class="math inline">\(x_j\)</span> 向点 <span
+class="math inline">\(x_i\)</span> 连一条长度为 <span
+class="math inline">\(c\)</span> 的有向边（<strong>注意方向</strong>是从
+<span class="math inline">\(j\)</span> 到 <span
+class="math inline">\(i\)</span> ，说明从 <span
+class="math inline">\(j\)</span> 可以走到 <span
+class="math inline">\(i\)</span> ，即 <span
+class="math inline">\(dist[i]\)</span> 可以有可能被 <span
+class="math inline">\(dist[j]\)</span> 更新），则跑完最短路之后的 <span
+class="math inline">\(dist\)</span>
+数组就是原不等式组的一个可行解，无解的情况即有负环存在</p>
+<h2 id="证明负环无解">证明负环无解</h2>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/差分约束.jpg"
+alt="差分约束" />
+<figcaption aria-hidden="true">差分约束</figcaption>
+</figure>
+<p>如上图我们建立的不等式关系为： <span class="math display">\[
+\begin{align}
+    x_2 &amp;\le x_1 + c_1 \nonumber \\
+    x_3 &amp;\le x_2 + c_2 \nonumber \\
+    x_1 &amp;\le x_3 + c_3 \nonumber \\
+\end{align}
+\]</span> 我们可以进行一个放缩： <span class="math display">\[
+\begin{align}
+    x_1 &amp;\le x_3 + c_3 \nonumber \\
+    &amp;\le x_2 + c_2 + c_3 \nonumber \\
+    &amp;\le x_1 + c_1 + c_2 + c_3 \nonumber
+\end{align}
+\]</span> 由于是负环，所以 <span class="math inline">\(c_1 + c_2 + c_3
+&lt; 0\)</span>，则上述不等式说明 <span
+class="math inline">\(x_1\)</span>
+小于自己加上一个负数，这是显然矛盾的</p>
+<h2 id="求最值">求最值</h2>
+<p>若我们要求解这组不等式的每一个变量 <span
+class="math inline">\(x\)</span> 的最值，则必有一个约束条件形如：<span
+class="math inline">\(x \ge
+0\)</span>，否则所有等式都是<strong>相对关系</strong>，我们可以在等式两边同时加上一个常数
+<span class="math inline">\(d\)</span> 来获得新的解，此时变量 <span
+class="math inline">\(x\)</span>
+的值域可从负无穷到正无穷，无法求出最值</p>
+<p>处理形如 <span class="math inline">\(x_i \le c\)</span> 其中 <span
+class="math inline">\(c\)</span> 是一个常数：建立一个源点，假设这个点为
+<span class="math inline">\(0\)</span> 号点，则从 <span
+class="math inline">\(x_0\)</span> 向 <span
+class="math inline">\(x_i\)</span> 连一条长度为 <span
+class="math inline">\(c\)</span> 的有向边，其中 <span
+class="math inline">\(x_0 = 0\)</span> 即 <span
+class="math inline">\(dist[0] = 0\)</span></p>
+<h3 id="最大值">最大值</h3>
+<p>由于存在最值，我们一定可以将 <span class="math inline">\(x_i \le x_j
++ c_i\)</span> 通过如 <span class="math inline">\(x_i \le x_k + c_j +
+c_i\)</span> 这样的放缩，放缩到 <span class="math inline">\(x_i \le x_0
++ c_0 \dots + c_i\)</span>，由于 <span class="math inline">\(x_0 =
+0\)</span>，所以此放缩后的不等式等价于从 <span
+class="math inline">\(0\)</span> 号点走到 <span
+class="math inline">\(i\)</span> 的所有路径，而我们要求的最大值（<span
+class="math inline">\(x_i\)</span>
+的上界）就是所有路径长度中的最小值，也即从 <span
+class="math inline">\(0\)</span> 号点到 <span
+class="math inline">\(i\)</span> 的最短路</p>
+<h3 id="最小值">最小值</h3>
+<p>与最大值类似，<span class="math inline">\(x_j \ge x_i +
+c_i\)</span>，我们最后可以放缩得到 <span class="math inline">\(x_j \ge
+x_0 + c_0 \dots +c_i\)</span>，此不等式等价于所有从 <span
+class="math inline">\(0\)</span> 号点走到 <span
+class="math inline">\(j\)</span>
+号点的路径长度，而我们要求的最小值（<span
+class="math inline">\(x_j\)</span>的下界），就是所有路径长度中的最大值，也即从
+<span class="math inline">\(0\)</span> 号点到 <span
+class="math inline">\(j\)</span> 的最长路</p>
+<h2 id="做法总结">做法总结</h2>
+<p>以最长路为例： 1. 边权无限制：<span class="math inline">\(\text{spfa}
+\ \ \ O(nm)\)</span> 2. 边权非负：<span
+class="math inline">\(\text{tarjan} \ \ \  O(n + m)\)</span> 3. 边权
+<span class="math inline">\(&gt; 0\)</span> : 拓扑排序 <span
+class="math inline">\(O(n + m)\)</span></p>
+<h1 id="连通分量">连通分量</h1>
+<h2 id="一些定义">一些定义</h2>
+<ol type="1">
+<li><p>对于一个有向图，连通分量指：对于分量中的任意两点 <span
+class="math inline">\(u, v\)</span>，必然可以从 <span
+class="math inline">\(u\)</span> 走到 <span
+class="math inline">\(v\)</span>， 且从 <span
+class="math inline">\(v\)</span> 走到 <span
+class="math inline">\(u\)</span></p></li>
+<li><p>强连通分量（SCC）：极大连通分量</p></li>
+<li><p>桥：对于一个连通图来说，如果把某条边删掉之后，会使得原来的整个连通图变得不连通，这个边就称作桥<br />
+等价地说，一条边是一座桥当且仅当这条边不在任何环上</p></li>
+<li><p>边双连通分量（e - DCC）：极大的，不含有桥的连通分量<br />
+性质：任意两点之间含有两条不相交的路径</p></li>
+<li><p>割点：对于一个连通图，如果把某个点删掉（）会删除与其关联的所有边）之后，整个图会变得不连通，那么这个点就称为割点<br />
+每个割点：至少属于两个连通分量</p></li>
+<li><p>点双连通分量（v - DCC）：极大的，不含有割点的连通分量</p></li>
+<li><p>两个割点之间的边不一定是桥：</p>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/割点和桥.jpg"
+alt="割点和桥" />
+<figcaption aria-hidden="true">割点和桥</figcaption>
+</figure>
+<p>一个桥的两个端点不一定是割点（一个点连通分量不一定是边连通分量）：</p>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/桥和割点.jpg"
+alt="桥和割点" />
+<figcaption aria-hidden="true">桥和割点</figcaption>
+</figure>
+<p>一个边连通分量不一定是点连通分量：</p>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/边连通分量和点连通分量.jpg"
+alt="边连通分量和点连通分量" />
+<figcaption aria-hidden="true">边连通分量和点连通分量</figcaption>
+</figure></li>
+</ol>
+<h2 id="一些结论">一些结论</h2>
+<ol type="1">
+<li>将有向图变成强连通分量所需要加的最少边数为 <span
+class="math inline">\(\max(p, q)\)</span>，其中 <span
+class="math inline">\(p\)</span> 是缩点之后入读为 <span
+class="math inline">\(0\)</span> 的点的数量， <span
+class="math inline">\(q\)</span> 是缩点之后出度为 <span
+class="math inline">\(0\)</span> 的点的数量</li>
+<li>将无向图连通图变成边双连通分量所需要加的最少边数是 <span
+class="math inline">\(\lceil cnt / 2 \rceil\)</span>，其中 <span
+class="math inline">\(cnt\)</span> 是缩点之后叶子节点的数量</li>
+</ol>
+<h2 id="有向图的强连通分量">有向图的强连通分量</h2>
+<p>有可能可以将强连通分量缩点之后，变成一个拓扑图进行递推</p>
+<p><span class="math inline">\(\text{Tarjan}\)</span> 求 <span
+class="math inline">\(\text{SCC}\)</span> :</p>
+<p>在 DFS 的过程中：树枝边，前向边，后向边，横叉边</p>
+<p>如果 <span class="math inline">\(x\)</span> 在强连通分量中：1.
+存在后向边指向祖先节点 2. 先走到横叉边，横叉边再走到祖先节点</p>
+<p>对每个点定义两个时间戳：<span
+class="math inline">\(\text{dfn}[u]\)</span> 表示遍历到 <span
+class="math inline">\(u\)</span> 的时间戳，<span
+class="math inline">\(\text{low}[u]\)</span> 表示从 <span
+class="math inline">\(u\)</span> 开始走，所能遍历到的最小时间戳<br />
+<span class="math inline">\(u\)</span> 是其所在强连通分量的最高点 <span
+class="math inline">\(\iff \text{dfn}[u] == \text{low}[u]\)</span></p>
+<p>代码中的
+<code>else if (in_stk[j]) low[u] = min(low[u], dfn[j]);</code> 可以改为
+<code>else if (in_stk[j]) low[u] = min(low[u], low[j]);</code></p>
+<details>
+<summary>
+原因（？
+</summary>
+<blockquote>
+<p>else if 那一行里面能不能把 dfn[j] 换成 low[j]
+呢？显然是可以的，<br />
+这一行只会在压缩点的过程中用到，因为非压缩点是按照拓扑序遍历的，拓扑序不会遍历到之前搜到的点，否则就成环了。
+在压缩的过程中我们也只会在拆环的时候（即遍历到一个环的起点的时候）才会用到这一行，如果是原代码那么返回路径上存的就是起点的实际编号值dfn，<br />
+如果改成 low 呢？只有从起点已经遍历过一个环了，并且终点在起点前面，那么
+low
+就是存的前面起点的值，即我们刚遍历大环成为一个相对的小环了，这时候存的此时起点能走到的最小值<br />
+会不会改了之后成为一个较大值呢？不会，因为low是通过两次min函数比较出来的，最起码比自己的编号值要小，不然也不会完成赋值。</p>
+</blockquote>
+<blockquote>
+<p>我们可以讨论一下两种写法的意义何在呢？<br />
+第一种模板的写法将拆环的起点编号dfn存到每一个点的 low 里面去了，因为 dfn
+编号是不参与比较与赋值的锚定顺寻的编号，所以我们可以知道每一点第一次拆环的时候是从哪个起点上面拆下来的<br />
+改成 low
+之后我们就只能知道每一个点第一次拆环的时候在环上面能追溯到最前面的环起点是哪一个值</p>
+</blockquote>
+<blockquote>
+<p>作者：BT7274
+链接：https://www.acwing.com/file_system/file/content/whole/index/content/5627037/
+来源：AcWing 著作权归作者所有</p>
+</blockquote>
+</details>
+<p>缩点：从每个点出发遍历邻边，如果这条边的两个点属于不同的强连通分量，就加一条边</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tarjan</span><span class="params">(<span class="type">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++ timestamp;</span><br><span class="line">    stk[ ++ top] = u, in_stk[u] = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = h[u]; ~i; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="keyword">if</span> (!dfn[j])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(j);</span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], low[j]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (in_stk[j])</span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], dfn[j]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (dfn[u] == low[u])</span><br><span class="line">    &#123;</span><br><span class="line">        ++ scc_cnt;</span><br><span class="line">        <span class="type">int</span> y;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            y = stk[top -- ];</span><br><span class="line">            in_stk[y] = <span class="literal">false</span>;</span><br><span class="line">            id[y] = scc_cnt;</span><br><span class="line">        &#125; <span class="keyword">while</span> (y != u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="无向图的边双连通分量">无向图的边双连通分量</h2>
+<p>如何找到所有桥：设当前在搜的节点是 <span
+class="math inline">\(x\)</span>，向下再搜一条边到节点 <span
+class="math inline">\(y\)</span>，若 <span
+class="math inline">\(y\)</span> 可以走到 <span
+class="math inline">\(x\)</span> 或者 <span
+class="math inline">\(x\)</span> 的祖先节点，那么这条 <span
+class="math inline">\(x——y\)</span> 的边就不是桥，否则 <span
+class="math inline">\(y\)</span> 最早只能走到 <span
+class="math inline">\(y\)</span> 自己，那么这条边就是桥，因此，是桥
+<span class="math inline">\(\iff \text{dfn}[x] &lt;
+\text{low}[y]\)</span></p>
+<p>如何找到所有的边双连通分量：若 <span
+class="math inline">\(\text{dfn}[x] ==
+\text{low}[x]\)</span>，则说明，<span class="math inline">\(x\)</span>
+向上的那条边是桥，则当前在栈中的，<span class="math inline">\(x\)</span>
+的子树节点，就是一个边双连通分量</p>
+<blockquote>
+<p>为什么这里不用记录是否在栈中：可能是因为无向图在搜的时候没有横向边，<span
+class="math inline">\(u\)</span>
+不会搜到已经在其他边双连通分量的点了，所以只要是 <span
+class="math inline">\(u\)</span> 可以走到的点，就能用来更新 <span
+class="math inline">\(\text{low}[u]\)</span></p>
+</blockquote>
+<p>同一个边双连通分量中的点的 low 标记不一定都相同</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tarjan</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> from)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++ timestamp;</span><br><span class="line">    stk[ ++ top] = u;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = h[u]; ~i; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="keyword">if</span> (!dfn[j])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(j, i);</span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], low[j]);</span><br><span class="line">            <span class="keyword">if</span> (dfn[u] &lt; low[j])</span><br><span class="line">                is_bridge[i] = is_bridge[i ^ <span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (i != (from ^ <span class="number">1</span>))</span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], dfn[j]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (dfn[u] == low[u])</span><br><span class="line">    &#123;</span><br><span class="line">        ++ dcc_cnt;</span><br><span class="line">        <span class="type">int</span> y;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            y = stk[top -- ];</span><br><span class="line">            id[y] = dcc_cnt;</span><br><span class="line">        &#125; <span class="keyword">while</span> (y != u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="无向图的点双连通分量">无向图的点双连通分量</h2>
+<p>如何求割点：从点 <span class="math inline">\(x\)</span>
+向下再搜一条边到点 <span class="math inline">\(y\)</span>，若 <span
+class="math inline">\(y\)</span> 不可以走到 <span
+class="math inline">\(x\)</span> 的祖先节点： 1. <span
+class="math inline">\(x\)</span> 不是根节点，那么 <span
+class="math inline">\(x\)</span> 是割点 2. 如果 <span
+class="math inline">\(x\)</span> 是根节点，则如果有至少两个 <span
+class="math inline">\(y_i\)</span> 满足 <span
+class="math inline">\(\text{low}[y_i] \ge \text{dfn}[x]\)</span>，则
+<span class="math inline">\(x\)</span> 是割点</p>
+<p>缩点： 1. 每个割点单独作为一个点 2. 从每个 v-DCC
+向其所包含的每个割点连一条边 <img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/点缩点.jpg"
+alt="点缩点" /></p>
+<p>对于缩点之后的节点，每个节点（除了割点之外）的度数就代表它所代表的
+v-DCC 中有几个割点</p>
+<p><code>else low[u] = min(low[u], dfn[j]);</code> 中不可以将
+<code>dfn[j]</code> 换成 <code>low[j]</code><br />
+原因：会使得无法找到某些割点
+&gt;对于求割点来说，我们考虑的是删掉这个点之后的剩余部分还能不能联通，如果此时我们采用这种更新方式，可能就会存在某个点，它更新后反而能回到我们考虑的点的上方（通过间接方式），根据我们对割点的判断low[x]
+&lt;= low[y],
+我们会发现此时x居然不被判定为割点了。原因就在于，我们在间接去到S的时候，没有考虑到，割点会删掉x，这样子我们根本没法越过x去s</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">tarjan</span><span class="params">(<span class="type">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++ timestamp;</span><br><span class="line">    stk[ ++ top] = u;</span><br><span class="line">    <span class="comment">//u是孤立点：u是根节点且没有邻边</span></span><br><span class="line">    <span class="keyword">if</span> (u == root &amp;&amp; h[u] == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        dcc_cnt ++ ;</span><br><span class="line">        dcc[dcc_cnt].<span class="built_in">push_back</span>(u);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = h[u]; ~i; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="keyword">if</span> (!dfn[j])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(j);</span><br><span class="line">            low[u] = <span class="built_in">min</span>(low[u], low[j]);</span><br><span class="line">            <span class="keyword">if</span> (dfn[u] &lt;= low[j])</span><br><span class="line">            &#123;</span><br><span class="line">                cnt ++ ;</span><br><span class="line">                <span class="keyword">if</span> (u != root || cnt &gt; <span class="number">1</span>) cut[u] = <span class="literal">true</span>;    <span class="comment">//u是割点</span></span><br><span class="line">                ++ dcc_cnt;</span><br><span class="line">                <span class="type">int</span> y;</span><br><span class="line">                <span class="keyword">do</span> &#123;</span><br><span class="line">                    y = stk[top -- ];</span><br><span class="line">                    dcc[dcc_cnt].<span class="built_in">push_back</span>(y);</span><br><span class="line">                &#125; <span class="keyword">while</span> (y != j);</span><br><span class="line">                dcc[dcc_cnt].<span class="built_in">push_back</span>(u);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> low[u] = <span class="built_in">min</span>(low[u], dfn[j]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> root = <span class="number">1</span>; root &lt;= n; root++)</span><br><span class="line">    <span class="keyword">if</span>(!dfn[root]) <span class="built_in">tarjan</span>(root);</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//求每个 v-DCC 的割点数量（度数）</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= dcc_cnt; i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; dcc[i].<span class="built_in">size</span>(); j++)</span><br><span class="line">        <span class="keyword">if</span>(cut[dcc[i][j]]) cnt++</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="lca">LCA</h1>
+<h2 id="倍增lca">倍增LCA</h2>
+<p><span class="math inline">\(\text{fa}[i,j]\)</span> 表示从 <span
+class="math inline">\(i\)</span> 开始， 向上跳 <span
+class="math inline">\(2^j\)</span> 步所到达的点 哨兵：如果从 <span
+class="math inline">\(i\)</span> 开始跳 <span
+class="math inline">\(2^j\)</span> 步会跳过根节点，那么 <span
+class="math inline">\(\text{fa}[i,j] = 0, depth[0] = 0\)</span></p>
+<ol type="1">
+<li>先将两个点跳到同一层</li>
+<li>如果没有跳到同一个点，就让两个点同时往上跳，一直跳到它们的最近公共祖先的<strong>下一层</strong></li>
+</ol>
+<p>预处理 <span class="math inline">\(O(n \log n)\)</span><br />
+查询 <span class="math inline">\(O(\log n )\)</span></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">bfs</span><span class="params">(<span class="type">int</span> root)</span>  <span class="comment">// 预处理倍增数组</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(depth, <span class="number">0x3f</span>, <span class="keyword">sizeof</span> depth);</span><br><span class="line">    depth[<span class="number">0</span>] = <span class="number">0</span>, depth[root] = <span class="number">1</span>;  <span class="comment">// depth存储节点所在层数</span></span><br><span class="line">    <span class="type">int</span> hh = <span class="number">0</span>, tt = <span class="number">0</span>;</span><br><span class="line">    q[<span class="number">0</span>] = root;</span><br><span class="line">    <span class="keyword">while</span> (hh &lt;= tt)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> t = q[hh ++ ];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = h[t]; ~i; i = ne[i])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> j = e[i];</span><br><span class="line">            <span class="keyword">if</span> (depth[j] &gt; depth[t] + <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                depth[j] = depth[t] + <span class="number">1</span>;</span><br><span class="line">                q[ ++ tt] = j;</span><br><span class="line">                fa[j][<span class="number">0</span>] = t;  <span class="comment">// j的第二次幂个父节点</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= <span class="number">15</span>; k ++ )</span><br><span class="line">                    fa[j][k] = fa[fa[j][k - <span class="number">1</span>]][k - <span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">lca</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>  <span class="comment">// 返回a和b的最近公共祖先</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (depth[a] &lt; depth[b]) <span class="built_in">swap</span>(a, b);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">15</span>; k &gt;= <span class="number">0</span>; k -- )</span><br><span class="line">        <span class="keyword">if</span> (depth[fa[a][k]] &gt;= depth[b])</span><br><span class="line">            a = fa[a][k];</span><br><span class="line">    <span class="keyword">if</span> (a == b) <span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">15</span>; k &gt;= <span class="number">0</span>; k -- )</span><br><span class="line">        <span class="keyword">if</span> (fa[a][k] != fa[b][k])</span><br><span class="line">        &#123;</span><br><span class="line">            a = fa[a][k];</span><br><span class="line">            b = fa[b][k];</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> fa[a][<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="离线lca-on-m">离线LCA， <span class="math inline">\(O(n +
+m)\)</span></h2>
+<p>以询问树中两个点的最小距离为例：
+在深度优先遍历时，将所有点分成三大类： 1.
+已经遍历过，且回溯过的点，状态标记为 <span
+class="math inline">\(2\)</span> 2. 正在搜索的分支，状态标记为 <span
+class="math inline">\(1\)</span> 3. 还未搜索到的点，状态标记为 <span
+class="math inline">\(0\)</span></p>
+<p>对于当前正在搜索的点 <span
+class="math inline">\(x\)</span>，去找一下所有与这个点相关的询问，如问
+<span class="math inline">\(x\)</span> 和点 <span
+class="math inline">\(y\)</span> 的最近公共祖先是谁，如果点 <span
+class="math inline">\(y\)</span> 的状态是 <span
+class="math inline">\(2\)</span>，那么它们的最近公共祖先就是 <span
+class="math inline">\(\text{find}[y]\)</span></p>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/最近公共祖先.jpg"
+alt="最近公共祖先" />
+<figcaption aria-hidden="true">最近公共祖先</figcaption>
+</figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> p[N];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(p[x] != x) p[x] = <span class="built_in">find</span>(p[x]);</span><br><span class="line">    <span class="keyword">return</span> p[x];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> dist[N];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> fa)</span> <span class="comment">//预处理每个点到根节点的距离</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = h[u]; i != <span class="number">-1</span>; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="keyword">if</span>(j == fa) <span class="keyword">continue</span>;</span><br><span class="line">        dist[j] = dist[u] + w[i];</span><br><span class="line">        <span class="built_in">dfs</span>(j, u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> st[N];</span><br><span class="line"><span class="type">int</span> res[M];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">tarjan</span><span class="params">(<span class="type">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    st[u] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = h[u]; i != <span class="number">-1</span>; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="keyword">if</span>(!st[j])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">tarjan</span>(j);</span><br><span class="line">            p[j] = u;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">const</span> <span class="keyword">auto</span>&amp; [a, b] : query[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(st[a] == <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> r = <span class="built_in">find</span>(a);</span><br><span class="line">            <span class="comment">//这两个点之间的距离等于它们各自到根节点的距离之和</span></span><br><span class="line">            <span class="comment">//减去2倍的它们的最近公共祖先到根节点的距离</span></span><br><span class="line">            res[b] = dist[u] + dist[a] - dist[r] * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    st[u] = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="built_in">memset</span>(h, <span class="number">-1</span>, <span class="keyword">sizeof</span> h);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> a, b, c;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;</span><br><span class="line">        <span class="built_in">add</span>(a, b, c), <span class="built_in">add</span>(b, a, c);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">        <span class="keyword">if</span>(a != b)</span><br><span class="line">        &#123;</span><br><span class="line">            query[a].<span class="built_in">push_back</span>(&#123;b, i&#125;);</span><br><span class="line">            query[b].<span class="built_in">push_back</span>(&#123;a, i&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) p[i] = i;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">tarjan</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m; i++) cout &lt;&lt; res[i] &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="二分图">二分图</h1>
+<h2 id="前置术语">前置术语</h2>
+<ol type="1">
+<li><p>最大匹配：选出最多的边数，使得任意两条边都没有公共点</p></li>
+<li><p>增广路径：从一个非匹配点出发，沿着非匹配边——匹配边——非匹配边——匹配边
+<span class="math inline">\(\dots\)</span>
+交替走，若最后能走到另一个非匹配点，则称这条路径为增广路径</p></li>
+<li><p>最大匹配 <span class="math inline">\(\iff\)</span>
+不存在增广路径，因为如果存在增广路径，我们可以将路径上的所有匹配边变成非匹配边，非匹配边变成匹配边，此时匹配数量就增加
+<span class="math inline">\(1\)</span> 了</p></li>
+<li><p>最小点覆盖：选出最少的点数使得可以覆盖所有边</p></li>
+<li><p>最大独立集：选出最多的点，使得选出的内部点之间没有边</p></li>
+<li><p>最大团（最大独立集的补图）：选出最多的点，使得选出的内部点，任意两点之间都有边</p></li>
+<li><p>最小路径点覆盖：对于一个DAG（有向无环图），用最少的互不相交的路径将所有点覆盖</p></li>
+<li><p>最小路径重复点覆盖：与最小路径点覆盖不同的是：路径可以相交</p></li>
+</ol>
+<h2 id="二分图-1">二分图</h2>
+<ol type="1">
+<li>二分图：可以将一个图的点分成两个集合，使得图中的所有边都在这两个集合之间，集合内部没有边</li>
+<li>一个图是二分图 <span class="math inline">\(\iff\)</span>
+不存在奇数环 <span class="math inline">\(\iff\)</span>
+染色法不存在矛盾</li>
+<li>对于 <span class="math inline">\(N \times M\)</span>
+的网格，我们将所有横纵坐标之和为偶数的染成黑色，横纵坐标之和为奇数的染成白色，在某些情况下可以看做是二分图</li>
+<li>在二分图中，最小点覆盖 <span class="math inline">\(=\)</span>
+最大匹配数
+<details>
+<summary>
+证明
+</summary>
+<blockquote>
+首先显而易见，最小点覆盖一定 <span class="math inline">\(\ge\)</span>
+最大匹配数，以下证明等于号成立：
+<ol type="1">
+<li>求最大匹配</li>
+<li>从左部每一个非匹配点出发做一遍增广路径标记所有经过的点</li>
+<li>构造：选择左部所有未被标记的点和右部所有被标记的点</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>证明：由于不存在增广路径，所以从左边的非匹配点出发一定不会走到右边的非匹配点，所以右边的所有非匹配点均未被标记</p>
+</blockquote>
+<blockquote>
+<p>由于从左边的非匹配点出发，所以左边的所有非匹配点均被标记</p>
+</blockquote>
+<blockquote>
+<p>在一条匹配边两端的点，要么同时被标记，要么同时不被标记，因为左边的匹配点只会从右边的匹配点走过来，所以左边的匹配点的标记状态和这条匹配边连接的右边的点的标记状态相同</p>
+</blockquote>
+<blockquote>
+<p>对于所有匹配边：
+如果对应的匹配点被标记了我们选择右边的点，否则选择左边的点（保证了所有匹配边被选到了</p>
+</blockquote>
+<blockquote>
+<p>对于所有非匹配边（可以保证所有非匹配边都被选到：</p>
+</blockquote>
+<blockquote>
+<ol start="4" type="1">
+<li>左边的匹配点——右边的匹配点：若左边的匹配点被标记了，那么经过这条非匹配边，右边的匹配点也一定会被标记，由于右边的匹配点一定存在一条匹配边，且被标记了，所以我们会选择右边的点，若左边的匹配点没有被标记，同理我们会选到左边的点，即这条非匹配边一定会被选到</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="5" type="1">
+<li>左边的匹配点——右边的非匹配点：我们可以知道右边的那个非匹配点一定没有被标记，若左边的匹配点被标记了，那么就一定可以从左边的这个匹配点走到右边的非匹配点，右边的点就会被标记，产生矛盾，所以左边的的匹配点也一定不会标记，对于左边的匹配点，一定会存在一条匹配边，由于没有被标记，我们选择了左边的点，所以所有从左边匹配点连接向右边非匹配点的边都会被选择到</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="6" type="1">
+<li>左边的非匹配点——右边的匹配点：我们可以知道左边的那个非匹配点一定被标记，并且会从这个非匹配点出发经过右边的匹配点，所以右边的那个匹配点也一定被标记了，而右边的匹配点一定属于某一条匹配边，由于被标记了，那么右边的这个点就一定会被选择上，所以所有从左边非匹配点连向右边匹配点的边都会被选上</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="7" type="1">
+<li>左边的非匹配点——右边的非匹配点：我们就可以添加一条新的匹配边了，与最大匹配矛盾，所以不存在这样的边</li>
+</ol>
+</blockquote>
+</details></li>
+<li>在二分图中，求最大独立集 <span class="math inline">\(\iff\)</span>
+去掉最少的点，将所有边都破坏掉 <span class="math inline">\(\iff\)</span>
+找最小点覆盖 <span class="math inline">\(\iff\)</span>
+找最大匹配，因此若总点数是 <span class="math inline">\(n\)</span>
+，最大匹配数是 <span class="math inline">\(m\)</span> ，则最大独立集是
+<span class="math inline">\(n - m\)</span></li>
+<li>最小路径点覆盖：将所有点拆为两个点，分别为 <span
+class="math inline">\(i\)</span> 和 <span
+class="math inline">\(i&#39;\)</span>，对于一条有向边 <span
+class="math inline">\((i,j)\)</span> ,就连一条边从 <span
+class="math inline">\(i\)</span> 到 <span
+class="math inline">\(j&#39;\)</span>,
+那么原图就可以变为二分图，在新图上求最大匹配就是最小路径点覆盖，但是在写代码的时候不用真的拆点（），<span
+class="math inline">\(d[i][j]\)</span> 就可以表示是从 <span
+class="math inline">\(i\)</span> 向 <span
+class="math inline">\(j&#39;\)</span> 的边</li>
+<li>最小路径重复点覆盖：先对原图求一遍传递闭包，然后再在新图上求最小路径点覆盖，就是原图的最小路径重复点覆盖</li>
+</ol>
+<h2 id="匈牙利算法">匈牙利算法</h2>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = h[x]; i != <span class="number">-1</span>; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="keyword">if</span> (!st[j])</span><br><span class="line">        &#123;</span><br><span class="line">            st[j] = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">if</span> (match[j] == <span class="number">0</span> || <span class="built_in">find</span>(match[j]))</span><br><span class="line">            &#123;</span><br><span class="line">                match[j] = x;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="欧拉路径回路">欧拉路径/回路</h1>
+<ol type="1">
+<li>无向图，所有边都是连通的
+<ol type="1">
+<li>存在欧拉路径的充分必要条件：度数为奇数的点只能有 <span
+class="math inline">\(0\)</span> 个或者 <span
+class="math inline">\(2\)</span> 个</li>
+<li>存在欧拉回路的充分必要条件：度数为奇数的点只能有 <span
+class="math inline">\(0\)</span> 个</li>
+</ol></li>
+<li>有向图，所有边都是连通的
+<ol type="1">
+<li>存在欧拉路径的充分必要条件：所有点的出度均等于入度；或者除了两个点之外，其余所有点的出度等于入度，且剩余的两个点满足：一个点出度比入度多
+<span class="math inline">\(1\)</span>
+（起点），另一个点满足入度比出度多 <span
+class="math inline">\(1\)</span> （终点）</li>
+<li>存在欧拉回路的充分必要条件：所有点的出度均等于入度</li>
+</ol></li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//注意这里是引用&amp;</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span>&amp; i = h[u]; i != <span class="number">-1</span>; i = ne[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(used[i]) <span class="keyword">continue</span>;</span><br><span class="line">        used[i] = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span>(type == <span class="number">1</span>) used[i ^ <span class="number">1</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> t;</span><br><span class="line">        <span class="comment">//对于无向图 (0,1)表示第一条边,(2,3)表示第二条边,所以要得到第t条边的编号 t = i/2 + 1;</span></span><br><span class="line">        <span class="comment">//对于有向图 (0) 表示第一条边,(1)表示第二条边 所以 t = i + 1;</span></span><br><span class="line">        <span class="keyword">if</span>(type == <span class="number">1</span>)   <span class="comment">//type = 1是无向图，否则是有向图</span></span><br><span class="line">        &#123;</span><br><span class="line">            t = i / <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span>(i &amp; <span class="number">1</span>) t = -t;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> t = i + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> j = e[i];</span><br><span class="line">        <span class="built_in">dfs</span>(j);</span><br><span class="line">        ans[++cnt] = t;</span><br><span class="line">        <span class="keyword">if</span>(i == <span class="number">-1</span>) <span class="keyword">break</span>; <span class="comment">//有可能会越界（）</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最后是倒着输出的</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = cnt; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">        cout &lt;&lt; ans[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/03/19/ACM/SegmentTree/" rel="prev" title="线段树">
+                  <i class="fa fa-angle-left"></i> 线段树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/06/15/LESSON/%E8%AE%A1%E7%BB%84/" rel="next" title="计算机组成原理">
+                  计算机组成原理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">CMing</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
