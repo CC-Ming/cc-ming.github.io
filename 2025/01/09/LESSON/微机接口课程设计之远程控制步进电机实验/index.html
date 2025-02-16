@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/cm.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/cm.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":false,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1.课程设计目的  熟悉各常用可编程接口芯片的工作原理、使用方法及引脚连接特性，正确操作实验设备，能根据设计要求制定总体方案，完成硬件连线，承担责任。 能够根据要求编写出满足功能要求的软件代码，能够利用开发工具进行设计调试、协助分析运行结果、定位设计错误等。 具有创新意识。尝试对所要求的功能设计提出有效的改进设想并努力实现；或尝试增加新的系统功能并努力实现。 具有对微机输入输出系统进行需">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微机接口课程设计之远程控制步进电机实验">
+<meta property="og:url" content="http://example.com/2025/01/09/LESSON/%E5%BE%AE%E6%9C%BA%E6%8E%A5%E5%8F%A3%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6%E6%AD%A5%E8%BF%9B%E7%94%B5%E6%9C%BA%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="CMingの小站">
+<meta property="og:description" content="1.课程设计目的  熟悉各常用可编程接口芯片的工作原理、使用方法及引脚连接特性，正确操作实验设备，能根据设计要求制定总体方案，完成硬件连线，承担责任。 能够根据要求编写出满足功能要求的软件代码，能够利用开发工具进行设计调试、协助分析运行结果、定位设计错误等。 具有创新意识。尝试对所要求的功能设计提出有效的改进设想并努力实现；或尝试增加新的系统功能并努力实现。 具有对微机输入输出系统进行需">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E6%8E%A7%E5%88%B6%E6%9C%BA%E4%B8%BB%E7%A8%8B%E5%BA%8F.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E8%AF%BB%E5%8F%96%E4%B8%A4%E4%BD%8D%E5%8F%82%E6%95%B0%E5%AD%90%E7%A8%8B%E5%BA%8F.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E6%89%A7%E8%A1%8C%E6%9C%BA%E4%B8%BB%E7%A8%8B%E5%BA%8F.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E5%BB%B6%E6%97%B6%E8%AE%A1%E7%AE%97%E5%AD%90%E7%A8%8B%E5%BA%8F.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/sendbyte.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/recvbyte.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/sendGroup.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/recvgroup.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E6%9B%B4%E6%96%B0%E6%98%BE%E7%A4%BA%E5%AD%90%E7%A8%8B%E5%BA%8F.png">
+<meta property="og:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/ConvertToDisplay.png">
+<meta property="article:published_time" content="2025-01-09T08:14:31.000Z">
+<meta property="article:modified_time" content="2025-01-15T16:00:00.000Z">
+<meta property="article:author" content="CMing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/%E6%8E%A7%E5%88%B6%E6%9C%BA%E4%B8%BB%E7%A8%8B%E5%BA%8F.png">
+
+
+<link rel="canonical" href="http://example.com/2025/01/09/LESSON/%E5%BE%AE%E6%9C%BA%E6%8E%A5%E5%8F%A3%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6%E6%AD%A5%E8%BF%9B%E7%94%B5%E6%9C%BA%E5%AE%9E%E9%AA%8C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/01/09/LESSON/%E5%BE%AE%E6%9C%BA%E6%8E%A5%E5%8F%A3%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6%E6%AD%A5%E8%BF%9B%E7%94%B5%E6%9C%BA%E5%AE%9E%E9%AA%8C/","path":"2025/01/09/LESSON/微机接口课程设计之远程控制步进电机实验/","title":"微机接口课程设计之远程控制步进电机实验"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>微机接口课程设计之远程控制步进电机实验 | CMingの小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">CMingの小站</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E7%9B%AE%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">1.课程设计目的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">2. 需求分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 项目背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E9%9C%80%E6%B1%82"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 功能需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E9%9C%80%E6%B1%82"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 用户需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%9C%80%E6%B1%82"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 系统需求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">3.实验设备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.</span> <span class="nav-text">4.硬件设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%A1%AC%E4%BB%B6%E6%A1%86%E5%9B%BE"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 系统硬件框图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%A1%AC%E4%BB%B6%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 关键硬件模块设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E8%BF%9B%E7%94%B5%E6%9C%BA%E9%A9%B1%E5%8A%A8%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1 步进电机驱动模块设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.2.2 通信模块设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E9%94%AE%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.2.3.</span> <span class="nav-text">4.2.3 按键模块设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%A0%81%E7%AE%A1%E6%98%BE%E7%A4%BA%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.2.4.</span> <span class="nav-text">4.2.4 数码管显示模块设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E7%BA%BF%E8%AF%B4%E6%98%8E"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 连线说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.</span> <span class="nav-text">5.软件设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%9A%E4%B9%89"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 数据定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E9%87%8F%E5%AE%9A%E4%B9%89"><span class="nav-number">5.1.1.</span> <span class="nav-text">5.1.1 常量定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89"><span class="nav-number">5.1.2.</span> <span class="nav-text">5.1.2 变量定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E5%A4%96%E8%AE%BE%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 各外设初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E6%9C%BA%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 控制机程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E6%9C%BA%E4%B8%BB%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.3.1.</span> <span class="nav-text">5.3.1 控制机主程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E4%B8%A4%E4%BD%8D%E5%8F%82%E6%95%B0%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.3.2.</span> <span class="nav-text">5.3.2 读取两位参数子程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%9C%BA%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 执行机程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E6%9C%BA%E4%B8%BB%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.4.1.</span> <span class="nav-text">5.4.1 执行机主程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%A4%84%E7%90%86%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.4.2.</span> <span class="nav-text">5.4.2 命令处理子程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%B6%E6%97%B6%E8%AE%A1%E7%AE%97%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.4.3.</span> <span class="nav-text">5.4.3 延时计算子程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD"><span class="nav-number">5.4.4.</span> <span class="nav-text">5.4.4 中断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E5%90%91%E9%87%8F%E8%AE%BE%E7%BD%AE"><span class="nav-number">5.4.4.1.</span> <span class="nav-text">5.4.4.1 中断向量设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E6%96%AD%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.4.4.2.</span> <span class="nav-text">5.4.4.2 中断服务程序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE%E8%AE%A1%E6%95%B0%E6%9B%B4%E6%96%B0%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.4.5.</span> <span class="nav-text">5.4.5 位置计数更新子程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 通信程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E4%B8%80%E4%B8%AA%E5%AD%97%E8%8A%82"><span class="nav-number">5.5.1.</span> <span class="nav-text">5.5.1 发送一个字节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E4%B8%80%E4%B8%AA%E5%AD%97%E8%8A%82"><span class="nav-number">5.5.2.</span> <span class="nav-text">5.5.2 接收一个字节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E4%B8%80%E7%BB%84%E6%95%B0%E6%8D%AE"><span class="nav-number">5.5.3.</span> <span class="nav-text">5.5.3 发送一组数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%8F%97%E4%B8%80%E7%BB%84%E6%95%B0%E6%8D%AE"><span class="nav-number">5.5.4.</span> <span class="nav-text">5.5.4 接受一组数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%B6%E6%97%B6"><span class="nav-number">5.5.5.</span> <span class="nav-text">5.5.5 延时</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E5%90%8C%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 共同子程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E7%A0%81%E7%AE%A1%E6%89%AB%E6%8F%8F%E6%98%BE%E7%A4%BA"><span class="nav-number">5.6.1.</span> <span class="nav-text">5.5.1 数码管扫描显示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E6%8C%89%E9%94%AE"><span class="nav-number">5.6.2.</span> <span class="nav-text">5.5.2 读取按键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#updatedisplay"><span class="nav-number">5.6.3.</span> <span class="nav-text">5.5.3 UpdateDisplay</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#converttodisplay"><span class="nav-number">5.6.4.</span> <span class="nav-text">5.5.4 ConvertToDisplay</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E7%A1%AC%E4%BB%B6%E8%B0%83%E8%AF%95"><span class="nav-number">6.</span> <span class="nav-text">6.软硬件调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7.设计总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0%E6%83%85%E5%86%B5"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 主要功能实现情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E7%89%B9%E7%82%B9"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 技术特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E6%96%B0%E7%82%B9"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 创新点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E4%B8%8D%E8%B6%B3%E4%B8%8E%E6%94%B9%E8%BF%9B%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 存在的不足与改进建议</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">8.心得体会</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">9.</span> <span class="nav-text">9.参考文献</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AD%94%E8%BE%A9%E8%AE%B0%E5%BD%95"><span class="nav-number">10.</span> <span class="nav-text">10.答辩记录</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">CMing</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CC-Ming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CC-Ming" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/01/09/LESSON/%E5%BE%AE%E6%9C%BA%E6%8E%A5%E5%8F%A3%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%B9%8B%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6%E6%AD%A5%E8%BF%9B%E7%94%B5%E6%9C%BA%E5%AE%9E%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CMing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="微机接口课程设计之远程控制步进电机实验 | CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微机接口课程设计之远程控制步进电机实验
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-01-09 16:14:31" itemprop="dateCreated datePublished" datetime="2025-01-09T16:14:31+08:00">2025-01-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-16 00:00:00" itemprop="dateModified" datetime="2025-01-16T00:00:00+08:00">2025-01-16</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="课程设计目的">1.课程设计目的</h1>
+<ol type="1">
+<li>熟悉各常用可编程接口芯片的工作原理、使用方法及引脚连接特性，正确操作实验设备，能根据设计要求制定总体方案，完成硬件连线，承担责任。</li>
+<li>能够根据要求编写出满足功能要求的软件代码，能够利用开发工具进行设计调试、协助分析运行结果、定位设计错误等。</li>
+<li>具有创新意识。尝试对所要求的功能设计提出有效的改进设想并努力实现；或尝试增加新的系统功能并努力实现。</li>
+<li>具有对微机输入输出系统进行需求分析的能力，能针对具体的问题获取新知识完成系统的设计。</li>
+<li>能够以口头和书面方式准确地描述、总结所完成的设计和主要成果，撰写比较规范的课程设计报告。</li>
+<li>掌握综合控制键盘、数码管、步进电机的能力。</li>
+<li>掌握有关中断服务程序的编制方法。</li>
+</ol>
+<span id="more"></span>
+<h1 id="需求分析">2. 需求分析</h1>
+<h2 id="项目背景">2.1 项目背景</h2>
+<p>远程控制技术在工业自动化领域有着广泛应用。本项目旨在通过远程控制步进电机系统，模拟工业现场中常见的远程精确控制场景。通过本项目，可以深入理解串行通信、电机控制等关键技术。</p>
+<h2 id="功能需求">2.2 功能需求</h2>
+<h3 id="用户需求">2.2.1 用户需求</h3>
+<ol type="1">
+<li>控制机功能需求：
+<ul>
+<li>通过键盘输入控制命令</li>
+<li>实时显示电机位置信息</li>
+<li>支持多种控制模式（速度控制、步数控制）</li>
+<li>提供紧急停止功能</li>
+</ul></li>
+<li>执行机功能需求：
+<ul>
+<li>准确解析并执行控制命令</li>
+<li>实时计算并反馈位置信息</li>
+<li>控制步进电机运动</li>
+<li>本地显示位置信息</li>
+</ul></li>
+</ol>
+<h3 id="系统需求">2.2.2 系统需求</h3>
+<ol type="1">
+<li><p>功能性需求： 命令|功能 ---|--- A|停步进电机
+B##|正转（速度：##转/分）（顺时针） C##|反转（速度：##转/分）（逆时针）
+D##|正向步进##步（顺时针） E##|反向步进##步（逆时针） F |程序结束</p>
+<table>
+<thead>
+<tr>
+<th>位置信息格式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0###</td>
+<td>正向位置（范围0～999）</td>
+</tr>
+<tr>
+<td>-###</td>
+<td>反向位置（范围-999～0）</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>性能需求：</p>
+<ul>
+<li>命令响应时间 &lt; 100ms</li>
+<li>位置信息更新频率 ≥ 10Hz</li>
+<li>步进电机速度范围：1～99转/分</li>
+<li>位置计数范围：±1000步</li>
+</ul></li>
+</ol>
+<h1 id="实验设备">3.实验设备</h1>
+<p>本实验使用的主要设备包括： 1. 两套 SUN ES86PCIU+ 实验仪，分别作为： -
+控制机：负责发送控制命令 - 执行机：负责接收命令并控制步进电机 2.
+其中使用的主要硬件组件为： - 8255 可编程并行接口芯片 - 8259
+可编程中断控制器 - 8253 可编程定时器 - 8251 串行通信接口 - 2×4 矩阵键盘
+- 8 位数码管显示模块 - 步进电机（4相） 3. 开发环境：星研集成开发环境</p>
+<h1 id="硬件设计">4.硬件设计</h1>
+<h2 id="系统硬件框图">4.1 系统硬件框图</h2>
+<h2 id="关键硬件模块设计">4.2 关键硬件模块设计</h2>
+<h3 id="步进电机驱动模块设计">4.2.1 步进电机驱动模块设计</h3>
+<ol type="1">
+<li><p><strong>原理图介绍与分析</strong>：</p>
+<p><img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/7694d119ed198c797370830b2b37032c.png" /></p>
+<ul>
+<li><p>步进电机的步距角为18度（即转一圈走20步），采用单极型驱动<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>，其两个中心抽头（即图中的5线和6线）接VCC，因此驱动电机要给低电平。</p></li>
+<li><p>ULN2003A是一个达林顿阵列驱动器，其包含7组达林顿对，每组达林顿对的工作原理是反相输出<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>，即输入为高电平则输出为低电平。我们在ULN2003A输入前加了四个非门，所以驱动电机我们要控制PC口输出的是低电平。</p></li>
+<li><p>从原理图中我们可以看出，顺时针运转需要依次给 D -&gt; C -&gt; B
+-&gt; A 进行通电，逆时针则是 A -&gt; B -&gt; C -&gt; D。
+8255的PC4、PC5、PC6、PC7分别接电机的A、B、C、D，因此8255的PC4~PC7要配制成输出模式。</p>
+<table>
+<thead>
+<tr>
+<th>驱动方式</th>
+<th>逆时针（顺时针只需倒序激励序列）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单四拍</td>
+<td>A-&gt;B-&gt;C-&gt;D-&gt;A</td>
+</tr>
+<tr>
+<td>双四拍</td>
+<td>AB-&gt;BC-&gt;CD-&gt;DA-&gt;AB</td>
+</tr>
+<tr>
+<td>单双八拍</td>
+<td>A-&gt;AB-&gt;B-&gt;BC-&gt;C-&gt;CD-&gt;D-&gt;DA-&gt;A</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+<li><p><strong>原理简述（以图中步距角为45度的简单步进电机为例）<a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></strong>：</p>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/步进电机原理图.png"
+alt="步进电机原理图" />
+<figcaption aria-hidden="true">步进电机原理图</figcaption>
+</figure>
+<p>复习一下安培定则：用右手握住通电螺线管，让四指指向电流的方向，那么大拇指所指的那一端是通电螺线管的N极。</p>
+<p>如图所示，电机的转子有磁性，我们在定子铁芯上绕上线圈，根据安培定则可知改变通过线圈的电流的方向就可以改变它的极性，为简化驱动，我们没有采用需要改变电流方向的双极型电机，而是采用类似上图所示的单极型。图中红色代表N极，蓝色代表S极，以单四拍为例，给D通电，转子的N极与定子的S极一一对应，之后再给C通电，通过同性相斥、异性相吸的动力就可以驱动电机旋转。由于中心抽头的存在，我们一次只使用了半个线圈，所以两个绕组可以当成四个来用，即四相。</p></li>
+<li><p><strong>速度调节</strong>：
+以单四拍为例，给A通电，电机逆时针旋转18度，过一秒后给B通电，电机再逆时针旋转18度，依次类推，每一秒通一次电就走一步，而转一圈要20步，因此此时电机转一圈要20秒，即速度为3r/min。由此可知，我们通过调整两次通电间的时间间隔（比如上述的1秒），就可以调节电机的转速。要精准地控制时间间隔，我们采用了8253定时器来完成这一点。</p>
+<p>在速度为99r/min时，1min要走99 * 20 =
+1980步，时间间隔约为0.03秒，在速度为1r/min时，1min走20步，时间间隔约为3s，公式表示一下时间间隔的计算即：<span
+class="math inline">\(n\ (r/min)\)</span> 要求延时 <span
+class="math inline">\(= \frac{60\text{秒}}{n \times 20\text{步}} =
+\frac{3}{n} \text{秒}\)</span></p>
+<p>8253定时器的计数初值最多可以有16为，二进制下最大是65535。若根据不同的速度要求给定时器置入不同的计数初值，将定时器的out用作中断，就可以在每一次中断发生时给线圈通电，以达到调速的目的。假设给8253的定时器0接
+1Hz 的时钟频率，则计数初值的计算公式表示为：<span
+class="math inline">\(n\ (r/min)\)</span> 要求计数初值 <span
+class="math inline">\(= {3 \over n}s = {3000 \over n}ms\)</span> ，在
+65535 的范围之内。</p>
+<p>但是本次实验没有采用上述方式，而是固定计数初值，另设一个speed_delay变量来保存不同的速度下的延时，其单位为中断发生的次数，且8253定时器0接的是1MHz的时钟。这样，speed_delay的计算公式为：<span
+class="math inline">\({3\ \times 10 ^6 us \over {n\times N}}\)</span>
+，其中 <span class="math inline">\(N\)</span> 为计数初值，在本次实验中N
+取150，则speed_delay <span class="math inline">\(= {20000 \over
+n}\)</span> 。</p>
+<p>由于采用了中断的方式，因此我们还使用了8259芯片，该芯片的参数配置为：边沿触发，单片方式，中断类型号高五位为
+00001，一般全嵌套，缓冲方式，非自动结束，只开放 IR0 引脚的中断请求，即将
+8253 的out0 连接到 IR0上。</p></li>
+</ol>
+<h3 id="通信模块设计">4.2.2 通信模块设计</h3>
+<ol type="1">
+<li><p><strong>通信方式选择依据</strong>：
+由于并行通信的8255已被其他器件（如数码管、按键）占用，且并行传输距离过短，无法支持两个实验箱的距离，因此我们采用了串行通信的方式。
+实验箱虽有RS485模块，但我们不需要多点通信，RS232的一对一已足够完成本实验所需功能<a
+href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>。可惜实验中缺少RS232的连接线，因此我们将两个实验箱靠的较近，以使通信距离较短，进而可以直接采用TTL电平的方式通信，我们选用了8251芯片，并使控制机和执行机的8251芯片的RxD和TxD交叉相连（其中RxD为接受，TxD为发送，即发送对接受，接受对发送）。</p></li>
+<li><p><strong>8251通信参数配置</strong>：</p>
+<p><img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/ef92869f4b37c6229a0f78bec21371db.png" /></p>
+<ul>
+<li><strong>通信模式</strong>：异步通信</li>
+<li>数据位：8位</li>
+<li>停止位：1位</li>
+<li>校验方式：偶校验</li>
+<li>波特率：4800bps</li>
+<li>波特率系数：16倍</li>
+<li><strong>工作模式</strong>：全双工（同时支持发送和接收）</li>
+</ul></li>
+<li><p><strong>可靠性考虑</strong>：</p>
+<ul>
+<li>由于线路连接比较简陋，选择较低波特率（4800）以提高通信可靠性</li>
+<li>采用偶校验位进行错误检测（但是本此实验中软件程序并没有对其处理，未来可以增加以提高通信的可靠性）</li>
+<li>确保共用同一地（GND）参考电平</li>
+</ul></li>
+</ol>
+<h3 id="按键模块设计">4.2.3 按键模块设计</h3>
+<ol type="1">
+<li><p><strong>原理图介绍</strong>：</p>
+<p><img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/ac9afda797f250f3db249424e7db6d5a_720.png" /></p>
+<p>实验箱上的矩阵键盘部分虽然看上去是 <span class="math inline">\(4
+\times 4\)</span> 的，但是通过原理图我们可知实际上这是一个 <span
+class="math inline">\(2 \times 8\)</span>
+的矩阵键盘。键盘的列线接8255的PB口，有两个行线，其中 KL1 接
+PC0，KL2接PC1。</p></li>
+<li><p><strong>按键扫描分析</strong>：从原理图中可知，行线KL1和KL2接了一个上拉电阻到VCC，因此当没有按键按下时为高电平，采用逐列扫描的方式，向某一列输出低电平（而其他列为高电平），当某个按键被按下时，对应的行线就会被拉低，因此通过检测到的低电平行线和当前扫描列的组合可以得到该按键的行列码。因此也可知8255的PC0～PC3配置成输入模式，而PB口配置成输出模式。</p></li>
+<li><p><strong>按键消抖处理</strong>：</p>
+<p>由机械按键的抖动特性：</p>
+<ol type="1">
+<li><p>机械按键的抖动时间一般在<strong>5ms~10ms</strong>之间</p></li>
+<li><p>一般的机械按键按下持续时间<strong>不会低于100ms</strong></p></li>
+</ol>
+<p>因此我们采用延迟重采样的方式，一次延时间隔约10ms，一共重采样2次</p></li>
+</ol>
+<h3 id="数码管显示模块设计">4.2.4 数码管显示模块设计</h3>
+<ol type="1">
+<li><p><strong>原理图介绍</strong>：</p>
+<p><img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/ac9afda797f250f3db249424e7db6d5a_720.png" /></p>
+<p>数码管是共阳极的，段码和位选都是低电平有效，其段码接8255的PA口，位选接8255的PB口，因此8255的PB口和PA口都要配置成输出模式。</p></li>
+<li><p><strong>数码管扫描频率</strong>：扫描频率太低数码管会出现闪烁的现象，频率太高则亮度不够甚至无法看清，所以一般扫描间隔多为1ms或几毫秒，我们需要控制一下这个间隔时间。
+根据对实验箱CPU模块的观察以及上网查找到的资料，本次实验的8086芯片由 SAB
+8284B-P 时钟发生器和驱动器芯片提供系统时钟，SAB 8284B-P 外接的是 DX-A1V
+12.000 晶振，最终供给8086的应该是8MHz<a href="#fn5" class="footnote-ref"
+id="fnref5" role="doc-noteref"><sup>5</sup></a>。
+由此我们计算一下位扫描间隔时间，在delay中使用loop指令空循环以达到延时的目的，查阅资料可知在8086中loop指令在成功跳转情况下的时钟周期<a
+href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a>是17，假设我们循环500次，这将耗费8500个时钟周期，为8500/8MHz
+= 1.0625ms，完全合适。</p></li>
+</ol>
+<h2 id="连线说明">4.3 连线说明</h2>
+<ol type="1">
+<li><p><strong>控制机</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>D3区（8255）：CS、A0、A1</th>
+<th>——</th>
+<th>A3区：CS1、A0、A1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D3区：PC0、PC1</td>
+<td>——</td>
+<td>F5区：KL1、KL2</td>
+</tr>
+<tr>
+<td>D3区：JP20(PB)、B、C</td>
+<td>——</td>
+<td>F5区：A、B、C</td>
+</tr>
+<tr>
+<td>B3区：CS、A0</td>
+<td>——</td>
+<td>A3区：CS3、A0</td>
+</tr>
+<tr>
+<td>B3区：INT、INTA</td>
+<td>——</td>
+<td>A3区：INTR、INTA</td>
+</tr>
+<tr>
+<td>C4区（8253）：CS、A0、A1</td>
+<td>——</td>
+<td>A3区：CS2、A0、A1</td>
+</tr>
+<tr>
+<td>C4区：GATE</td>
+<td>——</td>
+<td>C1区：VCC</td>
+</tr>
+<tr>
+<td>C4区：CLK1</td>
+<td>——</td>
+<td>B2区：2M</td>
+</tr>
+<tr>
+<td>C4区：OUT1</td>
+<td>——</td>
+<td>C3区：RxC TxC</td>
+</tr>
+<tr>
+<td>C3区（8251）：CS、C/D</td>
+<td>——</td>
+<td>A3区：CS4、A0</td>
+</tr>
+<tr>
+<td>C3区：CLK</td>
+<td>——</td>
+<td>B2区：4M</td>
+</tr>
+<tr>
+<td>C3区：RXD、TXD</td>
+<td>——</td>
+<td>C3区（执行机）：TXD、RXD</td>
+</tr>
+</tbody>
+</table></li>
+<li><p><strong>执行机</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>D3区（8255）：CS、A0、A1</th>
+<th>——</th>
+<th>A3区：CS1、A0、A1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D3区：PC4、PC5、PC6、PC7</td>
+<td>——</td>
+<td>D1区（步进电机）：A、B、C、D</td>
+</tr>
+<tr>
+<td>B3区（8259）：CS、A0</td>
+<td>——</td>
+<td>A3区：CS3、A0</td>
+</tr>
+<tr>
+<td>B3区：INT、INTA</td>
+<td>——</td>
+<td>A3区：INTR、INTA</td>
+</tr>
+<tr>
+<td>C4区（8253）：CS、A0、A1</td>
+<td>——</td>
+<td>A3区：CS2、A0、A1</td>
+</tr>
+<tr>
+<td>C4区：GATE</td>
+<td>——</td>
+<td>C1区：VCC</td>
+</tr>
+<tr>
+<td>C4区：CLK0</td>
+<td>——</td>
+<td>B2区：1M</td>
+</tr>
+<tr>
+<td>C4区：OUT0</td>
+<td>——</td>
+<td>B3区：IR0</td>
+</tr>
+<tr>
+<td>C4区：CLK1</td>
+<td>——</td>
+<td>B2区：2M</td>
+</tr>
+<tr>
+<td>C4区：OUT1</td>
+<td>——</td>
+<td>C3区：RxC TxC</td>
+</tr>
+<tr>
+<td>C3区（8251）：CS、C/D</td>
+<td>——</td>
+<td>A3区：CS4、A0</td>
+</tr>
+<tr>
+<td>C3区：CLK</td>
+<td>——</td>
+<td>B2区：4M</td>
+</tr>
+<tr>
+<td>C3区：RXD、TXD</td>
+<td>——</td>
+<td>C3区（控制机）：TXD、RXD</td>
+</tr>
+</tbody>
+</table></li>
+</ol>
+<h1 id="软件设计">5.软件设计</h1>
+<h2 id="数据定义">5.1 数据定义</h2>
+<h3 id="常量定义">5.1.1 常量定义</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">;各外设端口地址</span><br><span class="line">IO8259_0    	EQU 	0250H</span><br><span class="line">IO8259_1    	EQU 	0251H</span><br><span class="line">Con_8253    	EQU 	0263H</span><br><span class="line">T0_8253     	EQU 	0260H</span><br><span class="line">T1_8253		EQU	0261H</span><br><span class="line">IO8255_Con  	EQU 	0273H</span><br><span class="line">IO8255_PC   	EQU 	0272H</span><br><span class="line">Con_8251	EQU	0241H</span><br><span class="line">Dat_8251	EQU	0240H</span><br><span class="line"></span><br><span class="line">; 8251数据传递的帧头和帧尾</span><br><span class="line">Fram_Head	EQU	0FAH</span><br><span class="line">Fram_Tail	EQU	0FBH	</span><br></pre></td></tr></table></figure>
+<h3 id="变量定义">5.1.2 变量定义</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">;控制机</span><br><span class="line">CurrentPos   	DW  	0       	; 当前位置计数，范围-1000到1000</span><br><span class="line">Command      	DB  	0       	; 当前命令</span><br><span class="line">DisplayBuf   	DB  	8 DUP(10H)	; 显示缓冲区</span><br><span class="line">IObuf		DB	4 DUP(10H)</span><br><span class="line">Sign    	DB  	0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">;执行机</span><br><span class="line">StepControl  	DB  	33H       	; 步进电机控制值</span><br><span class="line">CurrentPos   	DW  	0       	; 当前位置计数，范围-1000到1000</span><br><span class="line">TargetSteps  	DW  	0       	; 目标步数</span><br><span class="line">Speed        	DW  	0       	; 速度（转/分）</span><br><span class="line">StepDelay	DW	0		; 转动一步后，延时常数</span><br><span class="line">StepDelay1	DW 	0		; 备份</span><br><span class="line">bRunning     	DB  	0       	; 电机运行标志</span><br><span class="line">Direction    	DB  	0       	; 0=顺时针，1=逆时针</span><br><span class="line">Command      	DB  	0       	; 当前命令</span><br><span class="line">Param        	DW  	0       	; 命令参数</span><br><span class="line">DisplayBuf   	DB  	8 DUP(10H)	; 显示缓冲区</span><br><span class="line">IObuf		DB	4 DUP(10H)</span><br><span class="line">Sign		DB	0</span><br></pre></td></tr></table></figure>
+<h2 id="各外设初始化">5.2 各外设初始化</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">;CLK0 = 1M Hz	</span><br><span class="line">Init8253_T0	PROC	NEAR	</span><br><span class="line">	MOV	DX, Con_8253	</span><br><span class="line">	MOV	AL, 35H	</span><br><span class="line">	OUT	DX, AL           ;计数器T0设置在模式2状态, BCD码计数</span><br><span class="line"></span><br><span class="line">	MOV	DX, T0_8253	</span><br><span class="line">	MOV	AL, 50H	</span><br><span class="line">	OUT	DX, AL	</span><br><span class="line">	MOV	AL, 01H	</span><br><span class="line">	OUT	DX, AL		;计数初值为150</span><br><span class="line">	RET	</span><br><span class="line">Init8253_T0	ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Init8255	PROC	NEAR	</span><br><span class="line">	MOV	DX, IO8255_Con	</span><br><span class="line">	MOV	AL, 81H	</span><br><span class="line">	OUT	DX, AL	;8255 PC输出</span><br><span class="line">	DEC	DX	</span><br><span class="line">	MOV	AL, 0FFH	</span><br><span class="line">	OUT	DX, AL	;0FFH-&gt;8255 PC口中的PC4~PC7 输出高电平给电机的ABCD，即没有通电流，电机不转</span><br><span class="line">	;PC0~PC3会发生什么？？？</span><br><span class="line">	RET		</span><br><span class="line">Init8255	ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Init8259	PROC	NEAR	</span><br><span class="line">	MOV	DX, IO8259_0	;ICW1</span><br><span class="line">	MOV	AL, 13H	</span><br><span class="line">	OUT	DX, AL	</span><br><span class="line">	MOV	DX, IO8259_1	;ICW2，中断类型号搞五位为1，所以IR0是08H</span><br><span class="line">	MOV	AL, 08H	</span><br><span class="line">	OUT	DX, AL	</span><br><span class="line">	MOV	AL, 09H		;ICW4</span><br><span class="line">	OUT	DX, AL	</span><br><span class="line">	MOV	AL, 0FEH	;OCW1，开放IR0</span><br><span class="line">	OUT	DX, AL	</span><br><span class="line">	RET		</span><br><span class="line">Init8259	ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">; 8251初始化子程序</span><br><span class="line">Init8251	PROC	NEAR	</span><br><span class="line">	CALL	Reset8251	</span><br><span class="line">	MOV	DX,Con_8251	</span><br><span class="line">	; 0111 1110</span><br><span class="line">	MOV	AL,7EH		;波特率系数为16，8个数据位</span><br><span class="line">	OUT	DX,AL		;一个停止位，偶校验</span><br><span class="line">	CALL	DLTIME		;延时</span><br><span class="line">	; 0001 0101</span><br><span class="line">	MOV	AL,15H	     	;允许接收和发送发送数据，清错误标志</span><br><span class="line">	OUT	DX,AL	</span><br><span class="line">	CALL	DLTIME	</span><br><span class="line">	RET		</span><br><span class="line">Init8251	ENDP	</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">;CLK1 = 2M Hz		</span><br><span class="line">Init8253_T1	PROC	NEAR	</span><br><span class="line">	MOV	DX,Con_8253	</span><br><span class="line">	; 01 - 01 - 011 - 1</span><br><span class="line">	MOV	AL,57H		;定时器1，方式3</span><br><span class="line">	OUT	DX,AL	</span><br><span class="line"></span><br><span class="line">	MOV	DX,T1_8253	</span><br><span class="line">	MOV	AL,26H		;BCD码26(2000000/26)=16*4800</span><br><span class="line">	OUT	DX,AL	</span><br><span class="line">	RET			</span><br><span class="line">Init8253_T1	ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Reset8251	PROC	NEAR	</span><br><span class="line">	MOV	DX,Con_8251	</span><br><span class="line">	MOV	AL,0	</span><br><span class="line">	OUT	DX,AL		;向控制口写入&quot;0&quot;</span><br><span class="line">	CALL	DLTIME		;延时，等待写操作完成</span><br><span class="line">	OUT	DX,AL		;向控制口写入&quot;0&quot;</span><br><span class="line">	CALL	DLTIME		;延时</span><br><span class="line">	OUT	DX,AL		;向控制口写入&quot;0&quot;</span><br><span class="line">	CALL	DLTIME		;延时</span><br><span class="line">	MOV  	AL,40H		;向控制口写入复位字40H</span><br><span class="line">	OUT	DX,AL	</span><br><span class="line">	CALL	DLTIME	</span><br><span class="line">	RET		</span><br><span class="line">Reset8251	ENDP	</span><br></pre></td></tr></table></figure>
+<h2 id="控制机程序">5.3 控制机程序</h2>
+<h3 id="控制机主程序">5.3.1 控制机主程序</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/控制机主程序.png" alt="控制机主程序" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">; 控制机主程序</span><br><span class="line">CONTROL_MAIN 	PROC 	NEAR</span><br><span class="line">	CALL 	Init8251</span><br><span class="line">	CALL	Init8253_T1</span><br><span class="line">	CALL 	InitKeyDisplay</span><br><span class="line"></span><br><span class="line">CONTROL_LOOP:</span><br><span class="line">	LEA	SI, DisplayBuf</span><br><span class="line">	CALL 	Display8</span><br><span class="line">	CALL 	GetKeyA       	; 读取键盘输入</span><br><span class="line">    	JNB 	CHECK_POSITION  ; 无按键则检查位置信息</span><br><span class="line">	CMP 	AL, 0AH          ; 检查命令类型</span><br><span class="line">    	JB  	CHECK_POSITION</span><br><span class="line">	MOV 	Command, AL      ; 保存命令</span><br><span class="line">    	; 发送命令</span><br><span class="line">    	CALL 	Sendbyte      	; 发送命令</span><br><span class="line"></span><br><span class="line">    	; 如果是B, C, D, E命令，还需要发送参数</span><br><span class="line">    	CMP 	AL, 0AH         	; A命令</span><br><span class="line">    	JE 	CHECK_POSITION</span><br><span class="line">    	CMP 	AL, 0FH         	; F命令</span><br><span class="line">    	JE 	CONTROL_EXIT</span><br><span class="line"></span><br><span class="line">    	; 读取并发送参数</span><br><span class="line">    	CALL 	ReadTwoDigits</span><br><span class="line">    	CALL 	Sendbyte</span><br><span class="line">	MOV	AL, AH</span><br><span class="line">	CALL	Sendbyte</span><br><span class="line"></span><br><span class="line">CHECK_POSITION:</span><br><span class="line">    	; 检查是否有位置信息</span><br><span class="line">    	MOV 	DX, Con_8251</span><br><span class="line">    	IN 	AL, DX</span><br><span class="line">    	TEST 	AL, 02H        	; 测试接收缓冲</span><br><span class="line">    	JZ 	CONTROL_LOOP</span><br><span class="line"></span><br><span class="line">    	; 接收并显示位置信息</span><br><span class="line">;    	CALL 	RecvByte</span><br><span class="line">;	MOV	Direction, AL</span><br><span class="line">;	CALL	RecvByte</span><br><span class="line">;	MOV	AH, AL</span><br><span class="line">;	CALL	RecvByte</span><br><span class="line">;	XCHG	AH, AL</span><br><span class="line">;	MOV	CurrentPos, AX</span><br><span class="line">	</span><br><span class="line">	LEA	SI, IObuf</span><br><span class="line">	MOV	CX, 3	</span><br><span class="line">	CALL	RecvGroup</span><br><span class="line">	</span><br><span class="line">	MOV	AL, IObuf[0]</span><br><span class="line">	MOV	Sign, AL</span><br><span class="line">	MOV	AH, IObuf[1]</span><br><span class="line">	MOV	AL, IObuf[2]</span><br><span class="line">	MOV	CurrentPos, AX</span><br><span class="line">	</span><br><span class="line">    	; 更新显示缓冲区并显示</span><br><span class="line">	LEA	SI, DisplayBuf</span><br><span class="line">    	CALL 	UpdateDisplay</span><br><span class="line"></span><br><span class="line">    	JMP 	CONTROL_LOOP</span><br><span class="line"></span><br><span class="line">CONTROL_EXIT:</span><br><span class="line">    	RET</span><br><span class="line">CONTROL_MAIN 	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="读取两位参数子程序">5.3.2 读取两位参数子程序</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/读取两位参数子程序.png" alt="读取两位参数子程序" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">; ReadTwoDigits - 读取两位十进制数字</span><br><span class="line">; 输入: 无</span><br><span class="line">; 输出: AX = 读取到的两位数值(0-99)</span><br><span class="line">ReadTwoDigits 	PROC 	NEAR</span><br><span class="line">    	PUSH 	CX</span><br><span class="line"></span><br><span class="line">    	XOR 	AX, AX     	; 清零AX用于存储结果</span><br><span class="line">    	MOV 	CX, 2       	; 需要读取2位数字</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ReadDigit_Wait:    </span><br><span class="line">	LEA	SI, DisplayBuf</span><br><span class="line">	CALL 	Display8</span><br><span class="line">    	CALL 	GetKeyA     	; 读取键盘输入</span><br><span class="line">    	JNB 	ReadDigit_Wait	; 无按键则继续等待</span><br><span class="line"></span><br><span class="line">    	; 检查输入是否为数字(0-9)</span><br><span class="line">    	CMP 	AL, 9H</span><br><span class="line">    	JA  	ReadDigit_Wait ; 大于&#x27;9&#x27;则无效</span><br><span class="line"></span><br><span class="line">    	; 将当前数字合并到结果中</span><br><span class="line">    	LEA	SI, DisplayBuf</span><br><span class="line">    	MOV 	AH, DisplayBuf[0]</span><br><span class="line">	MOV	DisplayBuf[1], AH</span><br><span class="line">    	MOV 	DisplayBuf[0], AL  ; 显示到对应位置</span><br><span class="line"></span><br><span class="line">    	LOOP 	ReadDigit_Wait</span><br><span class="line"></span><br><span class="line">    	POP 	CX</span><br><span class="line"></span><br><span class="line">    	RET</span><br><span class="line">ReadTwoDigits 	ENDP</span><br></pre></td></tr></table></figure>
+<h2 id="执行机程序">5.4 执行机程序</h2>
+<h3 id="执行机主程序">5.4.1 执行机主程序</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/执行机主程序.png" alt="执行机主程序" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">; 执行机主程序</span><br><span class="line">EXEC_MAIN 	PROC 	NEAR</span><br><span class="line">    	; 初始化各个外设</span><br><span class="line">    	</span><br><span class="line">    	CALL 	Init8255</span><br><span class="line">    	CALL 	Init8253_T0</span><br><span class="line">    	CALL 	Init8253_T1</span><br><span class="line">    	CALL 	Init8259</span><br><span class="line">    	CALL 	Init8251</span><br><span class="line">    	CALL 	WriIntver</span><br><span class="line"></span><br><span class="line">EXEC_LOOP:</span><br><span class="line">    	; 检查是否有新命令</span><br><span class="line">	MOV	DX, Con_8251	</span><br><span class="line">	IN	AL, DX</span><br><span class="line">	TEST	AL, 2	</span><br><span class="line">    	JZ 	UPDATE_STATUS</span><br><span class="line"></span><br><span class="line">    	; 接收并处理命令</span><br><span class="line">    	CALL 	RecvByte</span><br><span class="line">    	MOV 	Command, AL</span><br><span class="line">	MOV 	bRunning, 0		; 停止电机运转</span><br><span class="line">    	CLI				; 子程序Flags不入栈</span><br><span class="line"></span><br><span class="line">    	; 如果需要参数则继续接收</span><br><span class="line">    	CMP 	AL, 0AH</span><br><span class="line">    	JE 	PROCESS_CMD</span><br><span class="line">    	CMP 	AL, 0FH</span><br><span class="line">    	JE 	EXEC_EXIT</span><br><span class="line"></span><br><span class="line">    	; 接收参数</span><br><span class="line">	CALL 	RecvByte</span><br><span class="line"></span><br><span class="line">	; 存入参数</span><br><span class="line">    	MOV 	DisplayBuf[0], AL</span><br><span class="line">	CALL 	RecvByte</span><br><span class="line">	MOV	DisplayBuf[1], AL</span><br><span class="line">	</span><br><span class="line">	LEA	SI, DisplayBuf</span><br><span class="line">	MOV	AL, DisplayBuf[0]</span><br><span class="line">	MOV	AH, DisplayBuf[1]</span><br><span class="line">	; 计算最终结果</span><br><span class="line">    	MOV 	BL, AL</span><br><span class="line">	MOV	BH, 10</span><br><span class="line">	MOV	AL, AH</span><br><span class="line">    	MUL 	BH            ; AX = AH * 10</span><br><span class="line">    	ADD 	AL, BL         ; 加上个位</span><br><span class="line">    	MOV 	AH, 0          ; 清零高位</span><br><span class="line">	LEA	SI, Param</span><br><span class="line">    	MOV 	Param, AX</span><br><span class="line"></span><br><span class="line">PROCESS_CMD:</span><br><span class="line">    	CALL 	ProcessCommand</span><br><span class="line"></span><br><span class="line">UPDATE_STATUS:</span><br><span class="line">    	; 发送当前位置信息</span><br><span class="line">;    	MOV 	AL, Direction</span><br><span class="line">;  	CALL 	Sendbyte</span><br><span class="line">;    	MOV 	AX, CurrentPos</span><br><span class="line">;    	CALL 	Sendbyte</span><br><span class="line">;	MOV 	AL, AH</span><br><span class="line">;   	CALL 	Sendbyte</span><br><span class="line"></span><br><span class="line">	LEA	SI, IObuf</span><br><span class="line">	MOV 	AL, Sign</span><br><span class="line">	MOV	[SI + 0], AL</span><br><span class="line">	MOV 	AX, CurrentPos</span><br><span class="line">	MOV	[SI + 1], AH</span><br><span class="line">	MOV	[SI + 2], AL</span><br><span class="line">	MOV	CX, 3</span><br><span class="line">      	CALL	SendGroup</span><br><span class="line"></span><br><span class="line">    	; 更新本地显示</span><br><span class="line">	LEA	SI, DisplayBuf</span><br><span class="line">    	CALL 	UpdateDisplay</span><br><span class="line">    	JMP 	EXEC_LOOP</span><br><span class="line"></span><br><span class="line">EXEC_EXIT:</span><br><span class="line">    	RET</span><br><span class="line">EXEC_MAIN 	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="命令处理子程序">5.4.2 命令处理子程序</h3>
+<figure>
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/命令处理子程序.png"
+alt="命令处理子程序" />
+<figcaption aria-hidden="true">命令处理子程序</figcaption>
+</figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">; 处理命令子程序</span><br><span class="line">ProcessCommand 	PROC 	NEAR</span><br><span class="line">    	PUSH 	AX</span><br><span class="line"></span><br><span class="line">    	MOV 	AL, Command</span><br><span class="line"></span><br><span class="line">    	CMP 	AL, 0AH            ; 停止 / 启动命令</span><br><span class="line">    	JE  	CMD_Stop</span><br><span class="line">    	CMP 	AL, 0BH            ; 正转命令</span><br><span class="line">    	JE  	CMD_ClockWise</span><br><span class="line">    	CMP 	AL, 0CH            ; 反转命令</span><br><span class="line">    	JE  	CMD_AntiClockWise</span><br><span class="line">    	CMP 	AL, 0DH            ; 正向步进</span><br><span class="line">    	JE  	CMD_StepForward</span><br><span class="line">    	CMP 	AL, 0EH            ; 反向步进</span><br><span class="line">    	JE  	CMD_StepBackward</span><br><span class="line"></span><br><span class="line">CMD_Stop:</span><br><span class="line">	MOV 	bRunning, 0</span><br><span class="line">	CLI</span><br><span class="line">	JMP 	ProcessCommand_Exit</span><br><span class="line"></span><br><span class="line">CMD_ClockWise:</span><br><span class="line">    	MOV 	Direction, 0</span><br><span class="line">	JMP 	starc</span><br><span class="line"></span><br><span class="line">CMD_AntiClockWise:</span><br><span class="line">    	MOV 	Direction, 1</span><br><span class="line">starc: 	MOV 	AX, Param</span><br><span class="line">    	MOV 	Speed, AX</span><br><span class="line">    	CALL 	StartMotor</span><br><span class="line">    	JMP 	ProcessCommand_Exit</span><br><span class="line"></span><br><span class="line">CMD_StepForward:</span><br><span class="line">    	MOV 	Direction, 0</span><br><span class="line">	JMP	stars</span><br><span class="line"></span><br><span class="line">CMD_StepBackward:</span><br><span class="line">    	MOV 	Direction, 1</span><br><span class="line">stars: 	MOV 	AX, Param</span><br><span class="line">    	MOV 	TargetSteps, AX</span><br><span class="line">    	CALL 	StepMotor</span><br><span class="line"></span><br><span class="line">ProcessCommand_Exit:</span><br><span class="line">    	POP 	AX</span><br><span class="line">    	RET</span><br><span class="line">ProcessCommand	ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">; StartMotor - 启动电机连续运转</span><br><span class="line">; 输入: Speed - 期望的转速(转/分)</span><br><span class="line">; 输出: 无</span><br><span class="line">StartMotor 	PROC 	NEAR</span><br><span class="line">    	; 检查速度是否有效</span><br><span class="line">    	CMP 	Speed, 0</span><br><span class="line">    	JE  	StartMotor_Exit    ; 速度为0则退出</span><br><span class="line"></span><br><span class="line">	CALL	TakeDelay</span><br><span class="line">	MOV 	bRunning, 1</span><br><span class="line">    	STI                   		; 开中断</span><br><span class="line">StartMotor_Exit:</span><br><span class="line">    	RET</span><br><span class="line">StartMotor 	ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">; StepMotor - 控制电机运行指定步数</span><br><span class="line">; 输入: TargetSteps - 目标步数</span><br><span class="line">; 输出: 无</span><br><span class="line">StepMotor 	PROC 	NEAR</span><br><span class="line"></span><br><span class="line">    	; 检查步数是否有效</span><br><span class="line">    	CMP 	TargetSteps, 0</span><br><span class="line">    	JE  	StepMotor_Exit  	; 步数为0则退出</span><br><span class="line"></span><br><span class="line">    	; 设置固定速度（例如60转/分）</span><br><span class="line">    	MOV 	Speed, 60</span><br><span class="line">    	CALL	TakeDelay</span><br><span class="line">    	; 启动电机 </span><br><span class="line">    	MOV 	bRunning, 1</span><br><span class="line">    	STI                   		; 开中断</span><br><span class="line">StepMotor_Exit:</span><br><span class="line">    	RET</span><br><span class="line">StepMotor 	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="延时计算子程序">5.4.3 延时计算子程序</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/延时计算子程序.png" alt="延时计算子程序" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">TakeDelay	PROC 	NEAR</span><br><span class="line">	PUSH	AX</span><br><span class="line">	PUSH	BX</span><br><span class="line">	PUSH	DX</span><br><span class="line">    	; 计算延时值</span><br><span class="line"></span><br><span class="line">    	MOV 	AX, 20000</span><br><span class="line">    	XOR	DX, DX</span><br><span class="line">	MOV	BX, Speed</span><br><span class="line">	DIV	BX</span><br><span class="line">	MOV	StepDelay, AX</span><br><span class="line">	MOV	StepDelay1, AX</span><br><span class="line">	</span><br><span class="line">	POP	DX</span><br><span class="line">	POP	BX</span><br><span class="line">	POP	AX</span><br><span class="line">	RET</span><br><span class="line">TakeDelay 	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="中断">5.4.4 中断</h3>
+<h4 id="中断向量设置">5.4.4.1 中断向量设置</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WriIntver	PROC	NEAR	</span><br><span class="line">	PUSH	ES	</span><br><span class="line">	MOV	AX, 0	</span><br><span class="line">	MOV	ES, AX		;中断向量表起始地址为00000H</span><br><span class="line">	MOV	DI, 20H		;中断向量类型号为08H，则中断向量地址 = 08H * 4 = 20H</span><br><span class="line">	LEA	AX, TIMER0	;AX -&gt; [(ES:DI)]，中断服务函数入口地址（偏移地址）</span><br><span class="line">	STOSW		</span><br><span class="line">	MOV	AX, CS	</span><br><span class="line">	STOSW			;中断向量表高位存放段地址</span><br><span class="line">	POP	ES	</span><br><span class="line">	RET		</span><br><span class="line">WriIntver	ENDP</span><br></pre></td></tr></table></figure>
+<h4 id="中断服务程序">5.4.4.2 中断服务程序</h4>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/中断服务程序.png" alt="中断服务程序" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">; 定时器中断服务程序</span><br><span class="line">TIMER0 	PROC</span><br><span class="line">    	PUSH 	AX</span><br><span class="line">    	PUSH 	DX</span><br><span class="line"></span><br><span class="line">    	CMP 	bRunning, 0</span><br><span class="line">    	JE  	TIMER0_Exit</span><br><span class="line"></span><br><span class="line">	DEC	StepDelay</span><br><span class="line">	JNZ	TIMER0_Exit</span><br><span class="line"></span><br><span class="line">	MOV	AX, StepDelay1</span><br><span class="line">	MOV	StepDelay, AX</span><br><span class="line"></span><br><span class="line">    	; 更新电机控制</span><br><span class="line">    	MOV 	AL, StepControl</span><br><span class="line">    	MOV	DX, IO8255_PC</span><br><span class="line">    	OUT 	DX, AL</span><br><span class="line"></span><br><span class="line">    	; 根据方向更新控制值</span><br><span class="line">    	CMP 	Direction, 0</span><br><span class="line">    	JE  	Rotate_CW</span><br><span class="line"></span><br><span class="line">Rotate_CCW:</span><br><span class="line">    	ROL 	AL, 1</span><br><span class="line">    	JMP 	Rotate_Done</span><br><span class="line"></span><br><span class="line">Rotate_CW:</span><br><span class="line">    	ROR 	AL, 1</span><br><span class="line"></span><br><span class="line">Rotate_Done:</span><br><span class="line">    	MOV 	StepControl, AL</span><br><span class="line"></span><br><span class="line">    	; 更新位置计数</span><br><span class="line">    	CALL 	UpdatePosition</span><br><span class="line">	MOV	AL, Command</span><br><span class="line">	CMP 	AL, 0BH            ; 正转命令</span><br><span class="line">    	JE  	TIMER0_Exit</span><br><span class="line">    	CMP 	AL, 0CH            ; 反转命令</span><br><span class="line">    	JE  	TIMER0_Exit</span><br><span class="line">    	; 检查是否需要停止</span><br><span class="line">    	DEC 	TargetSteps</span><br><span class="line">    	JNZ 	TIMER0_Exit</span><br><span class="line">	</span><br><span class="line">    	</span><br><span class="line">	MOV 	bRunning, 0</span><br><span class="line">    	ADD	SP, 16           ;Flags、CS、IP、AX、DX</span><br><span class="line">	POPF			;从堆栈弹出标志寄存器（恢复原来的IF状态）</span><br><span class="line">	CLI			;关中断（设置IF=0）	</span><br><span class="line">	PUSHF			;将标志寄存器压入堆栈（保存了IF=0的状态）</span><br><span class="line">	SUB	SP, 16	</span><br><span class="line">	NOP	</span><br><span class="line"></span><br><span class="line">TIMER0_Exit:</span><br><span class="line">	MOV	DX, IO8259_0	</span><br><span class="line">	MOV	AL, 20H		;OCW2，发送EOI中断结束</span><br><span class="line">	OUT	DX, AL	</span><br><span class="line">	POP	DX	</span><br><span class="line">	POP	AX	</span><br><span class="line">	IRET	</span><br><span class="line">TIMER0 ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="位置计数更新子程序">5.4.5 位置计数更新子程序</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">; 位置计数更新子程序</span><br><span class="line">UpdatePosition 	PROC 	NEAR</span><br><span class="line">	PUSH	BX</span><br><span class="line">	LEA	BX, CurrentPos</span><br><span class="line">    	CMP 	Direction, 0</span><br><span class="line">    	JE  	Pos_Inc</span><br><span class="line"></span><br><span class="line">Pos_Dec:</span><br><span class="line">	CMP	Sign, 1</span><br><span class="line">	JNE	qwq</span><br><span class="line">	JMP 	Clear</span><br><span class="line"></span><br><span class="line">qwq:    CMP 	CurrentPos, 0</span><br><span class="line">    	JNE 	qaq</span><br><span class="line">	XOR	Sign, 01H</span><br><span class="line">	INC	CurrentPos</span><br><span class="line">	JMP 	UpdatePos_Exit</span><br><span class="line"></span><br><span class="line">qaq:	DEC 	CurrentPos</span><br><span class="line">    	JMP 	UpdatePos_Exit</span><br><span class="line"></span><br><span class="line">Pos_Inc:</span><br><span class="line">	CMP	Sign, 0</span><br><span class="line">	JNE	qwq</span><br><span class="line">	JMP	Clear</span><br><span class="line"></span><br><span class="line">Clear:  INC 	CurrentPos</span><br><span class="line">	CMP 	CurrentPos, 1000</span><br><span class="line">    	JNE 	UpdatePos_Exit</span><br><span class="line">    	MOV 	CurrentPos, 0</span><br><span class="line"></span><br><span class="line">UpdatePos_Exit:</span><br><span class="line">	POP	BX</span><br><span class="line">    	RET</span><br><span class="line">UpdatePosition 	ENDP</span><br></pre></td></tr></table></figure>
+<h2 id="通信程序">5.5 通信程序</h2>
+<h3 id="发送一个字节">5.5.1 发送一个字节</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/sendbyte.png" alt="sendbyte" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">;发送一个字节，输入参数 AL</span><br><span class="line">Sendbyte	PROC	NEAR	</span><br><span class="line">	PUSH	DX</span><br><span class="line">	PUSH	AX	</span><br><span class="line">	MOV	DX,Con_8251	;读入状态</span><br><span class="line">Wait_Tx:	</span><br><span class="line"></span><br><span class="line">	; D0: TxRDY，发送器是否准备好</span><br><span class="line">	IN	AL,DX	</span><br><span class="line">	TEST	AL,1	</span><br><span class="line">	JZ	Wait_Tx		;允许数据发送吗？</span><br><span class="line">	POP	AX		;发送</span><br><span class="line">	MOV	DX,Dat_8251	</span><br><span class="line">	OUT	DX,AL	</span><br><span class="line">	POP	DX</span><br><span class="line">	RET		</span><br><span class="line">Sendbyte		ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="接收一个字节">5.5.2 接收一个字节</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/recvbyte.png" alt="recvbyte" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">; 接受一个字节，ZF = 0，且将结果存入AL</span><br><span class="line">RecvByte	PROC	NEAR	</span><br><span class="line">	PUSH	DX</span><br><span class="line">	PUSH	BX</span><br><span class="line">	MOV	DX,Con_8251	</span><br><span class="line">	</span><br><span class="line">Wait_Rx:</span><br><span class="line">	; D1: RxRDY，接收器是否准备好</span><br><span class="line">	IN	AL,DX		;读入状态</span><br><span class="line">	TEST	AL,2	</span><br><span class="line">	JZ	Wait_Rx		;有数据吗？</span><br><span class="line">	MOV	DX,Dat_8251	;有</span><br><span class="line">	IN	AL,DX</span><br><span class="line">;	LEA	BX,DATAbuf</span><br><span class="line">;	ADD	BX,COUNT</span><br><span class="line">;	MOV	[BX],AL</span><br><span class="line">;	INC	WORD PTR COUNT</span><br><span class="line">;	LEA	BX, COUNT</span><br><span class="line">;	CMP	COUNT, 100</span><br><span class="line">;	JB	Recv_Exit</span><br><span class="line">;FULL:	</span><br><span class="line">;	MOV	COUNT, 0</span><br><span class="line">Recv_Exit:</span><br><span class="line">	POP	BX</span><br><span class="line">	POP	DX</span><br><span class="line">	RET		</span><br><span class="line">RecvByte	ENDP	</span><br></pre></td></tr></table></figure>
+<h3 id="发送一组数据">5.5.3 发送一组数据</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/sendGroup.png" alt="sendGroup" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">;发送一组数据，输入参数 SI,CX</span><br><span class="line">SendGroup	PROC	NEAR</span><br><span class="line">	MOV	AL, Fram_Head</span><br><span class="line">	CALL	Sendbyte</span><br><span class="line">		</span><br><span class="line">SendNext:</span><br><span class="line">	MOV	AL, [SI]</span><br><span class="line">	CALL	Sendbyte</span><br><span class="line">	INC	SI</span><br><span class="line">	LOOP	SendNext</span><br><span class="line">	</span><br><span class="line">	MOV	AL, Fram_Tail</span><br><span class="line">	CALL	Sendbyte</span><br><span class="line">	RET		</span><br><span class="line">SendGroup	ENDP	</span><br></pre></td></tr></table></figure>
+<h3 id="接受一组数据">5.5.4 接受一组数据</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/recvgroup.png" alt="recvgroup" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">RecvGroup	PROC	NEAR	</span><br><span class="line">RecvFind:</span><br><span class="line">	CALL	DLTIME</span><br><span class="line">	CALL	RecvByte</span><br><span class="line">	CMP	AL, Fram_Head</span><br><span class="line">	JNE	RecvFind</span><br><span class="line">	CALL	DLTIME</span><br><span class="line">RecvNext:</span><br><span class="line">	CALL	RecvByte</span><br><span class="line">	MOV	[SI], AL</span><br><span class="line">	INC	SI</span><br><span class="line">	LOOP	RecvNext</span><br><span class="line">	</span><br><span class="line">	CALL	DLTIME</span><br><span class="line">	CALL	RecvByte</span><br><span class="line">;	CMP	AL, Fram_Tail</span><br><span class="line">;	JNE	RecvFind</span><br><span class="line">	CALL	DLTIME</span><br><span class="line">	RET		</span><br><span class="line">RecvGroup	ENDP	</span><br></pre></td></tr></table></figure>
+<h3 id="延时">5.5.5 延时</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">;延时</span><br><span class="line">DLTIME	PROC	NEAR</span><br><span class="line">	PUSH	CX	</span><br><span class="line">	MOV	CX,10	</span><br><span class="line">	LOOP	$</span><br><span class="line">	POP	CX	</span><br><span class="line">	RET		</span><br><span class="line">DLTIME	ENDP</span><br></pre></td></tr></table></figure>
+<h2 id="共同子程序">5.6 共同子程序</h2>
+<h3 id="数码管扫描显示">5.5.1 数码管扫描显示</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">DISPLAY8	PROC	NEAR</span><br><span class="line">	PUSHF</span><br><span class="line">	PUSH    ES</span><br><span class="line">	PUSH    DI</span><br><span class="line">	PUSH    SI</span><br><span class="line">	PUSH    CX</span><br><span class="line">	PUSH    DS</span><br><span class="line">	POP     ES</span><br><span class="line">	ASSUME 	ES:DGROUP</span><br><span class="line">	CLD</span><br><span class="line">	MOV     DI, OFFSET buffer</span><br><span class="line">	MOV     CX, 8</span><br><span class="line">	REP	MOVSB	; 重复 MOVSB 共 (CX) 次, [(ES:DI)] &lt;- [(DS:SI)], SI++, DI++</span><br><span class="line">	POP     CX</span><br><span class="line">	POP     SI</span><br><span class="line">	POP     DI</span><br><span class="line">	POP     ES</span><br><span class="line">	ASSUME 	ES:nothing</span><br><span class="line">	POPF</span><br><span class="line">	CALL    DIR</span><br><span class="line">	RETN</span><br><span class="line">DISPLAY8        ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">DIR	PROC	NEAR                                     </span><br><span class="line">	PUSHF</span><br><span class="line">	PUSH    AX</span><br><span class="line">	PUSH    BX</span><br><span class="line">	PUSH    DX</span><br><span class="line">	PUSH    SI</span><br><span class="line">	CLD				; 使SI/DI自动增量</span><br><span class="line">	MOV     SI, OFFSET buffer	; SI指向显示缓冲区起始地址</span><br><span class="line">	MOV     AH, 0FEH		; AH初值为11111110B，用于位选</span><br><span class="line">	MOV     BX, OFFSET SEG_TAB	; BX指向段码表起始地址</span><br><span class="line"></span><br><span class="line">DIR_LOOP:                              </span><br><span class="line">	LODSB			; [(DS:SI)] -&gt; AL, SI++	; 取显示缓冲区一个字节到AL</span><br><span class="line">	MOV     DX, AX		; 将未清除最高位的 AL 保存到 DL</span><br><span class="line">	AND     AL, 7FH		; 清除最高位，最高位为1代表要显示小数点，但是为了避免越界，需先清除最高位</span><br><span class="line">	XLAT			; 查表，(AL) &lt;- ((BX)+(AL))</span><br><span class="line">	TEST    DL, 80H		; 检查原来的AL的最高位是否为1</span><br><span class="line">	JZ      SHORT DIR_SHOW	; 不是1，直接送出显示</span><br><span class="line">	AND     AL, 7FH		; 是1，说明要显示小数点，将取得的段码的最高位（dp位）置0，0为亮，1为不亮</span><br><span class="line"></span><br><span class="line">DIR_SHOW:                             </span><br><span class="line">	MOV     DX, 270H	; PA口，数码管段码</span><br><span class="line">	OUT     DX, AL</span><br><span class="line">	INC     DX		; PB口，数码管位选</span><br><span class="line">	MOV     AL, AH</span><br><span class="line">	OUT     DX, AL</span><br><span class="line">	CALL    Delay</span><br><span class="line">	MOV     DX, 271H	; PB口，数码管位选</span><br><span class="line">	MOV     AL, 0FFH	; 全部不选，强制所有数码管灭掉，作用是消除残影</span><br><span class="line">	OUT     DX, AL</span><br><span class="line">	TEST    AH, 80H		; 检测位选最高位是否为0，为0代表当前扫到了第八个数码管，一次扫描结束</span><br><span class="line">	JZ      SHORT DIR_EIXT</span><br><span class="line">	ROL     AH, 1		; 位选循环左移一位</span><br><span class="line">	JMP     SHORT DIR_LOOP 	; 扫描下一位</span><br><span class="line"></span><br><span class="line">DIR_EIXT:</span><br><span class="line">	POP     SI</span><br><span class="line">	POP     DX</span><br><span class="line">	POP     BX</span><br><span class="line">	POP     AX</span><br><span class="line">	POPF</span><br><span class="line">	RETN</span><br><span class="line">DIR	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="读取按键">5.5.2 读取按键</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">GETKEYA	PROC NEAR</span><br><span class="line">	CALL    SCAN_KEY</span><br><span class="line">	RETN</span><br><span class="line">GETKEYA	endp</span><br><span class="line"></span><br><span class="line">SCAN_KEY	PROC 	NEAR               </span><br><span class="line">	PUSH    BX</span><br><span class="line">	PUSH    DX</span><br><span class="line">	CALL    AllKey</span><br><span class="line">	JNZ     SHORT Has_Key</span><br><span class="line">	CALL    DIR		</span><br><span class="line">	JMP     SHORT NO_KEY    </span><br><span class="line">	DB	90H</span><br><span class="line">Has_Key:                              </span><br><span class="line">	CALL    DIR		; 显示数码管, 当然也是用 DIR 中的延迟来作为消抖的延时，约9～10ms</span><br><span class="line">	CALL    AllKey		; 延时后重采样</span><br><span class="line">	JZ      SHORT NO_KEY    ; 若无按键按下，认为是干扰，下面同理</span><br><span class="line">	CALL    DIR</span><br><span class="line">	CALL    AllKey</span><br><span class="line">	JZ      SHORT NO_KEY    </span><br><span class="line">	MOV     BL, 0FEH	; 1111 1110 选择第0列</span><br><span class="line">	MOV     BH, 0           ; 从第0列开始，存放列值</span><br><span class="line"></span><br><span class="line">SCAN_LOOP:                                  </span><br><span class="line">	MOV     DX, 271H	; PB口，键盘列线</span><br><span class="line">	MOV     AL, BL</span><br><span class="line">	OUT     DX, AL</span><br><span class="line">	INC     DX		; PC口</span><br><span class="line">	IN      AL, DX		; 读行线</span><br><span class="line">	TEST    AL, 1		; 测试第0行是否有按键按下</span><br><span class="line">	JNZ     SHORT Line_1	; 无按键按下，说明第一行可能有按键按下</span><br><span class="line">	XOR     AL, AL		; 第0行有按键按下，则偏移值为0</span><br><span class="line">	JMP     SHORT Line_0</span><br><span class="line">	ALIGN	2</span><br><span class="line"></span><br><span class="line">Line_1:                                 </span><br><span class="line">	TEST    AL, 2		; 测试第1行是否有按键按下</span><br><span class="line">	JNZ     SHORT Next	; 无按键按下则跳转</span><br><span class="line">	MOV     AL, 8		; 第一行有按键按下，偏移值为8，即第0行的8个按键</span><br><span class="line"></span><br><span class="line">Line_0:                                 </span><br><span class="line">	ADD     BH, AL		; 当前的第几列加上偏移量，比如第i行的第j列，值为 i * 8 + j</span><br><span class="line"></span><br><span class="line">Wait_Key:                                   </span><br><span class="line">	CALL    DIR</span><br><span class="line">	CALL    AllKey</span><br><span class="line">	JNZ     SHORT Wait_Key  ; 等到按键松开</span><br><span class="line">	MOV     AL, BH          ; AL中存放按键的值</span><br><span class="line">	STC                     ; 设置进位标志，表示有按键按下</span><br><span class="line">	JMP     SHORT SCAN_EXIT</span><br><span class="line">	ALIGN	2</span><br><span class="line"></span><br><span class="line">Next:</span><br><span class="line">	INC     BH              ; 列值加一</span><br><span class="line">	TEST    BL, 80H		; 检测列扫描最高位是否为0</span><br><span class="line">	JZ      SHORT NO_KEY    ; 为0，本次8列扫描结束，依然没检测到按键按下，认为没有按键按下</span><br><span class="line">	ROL     BL, 1		; 循环左移一位，扫描下一列</span><br><span class="line">	JMP     SHORT SCAN_LOOP</span><br><span class="line"></span><br><span class="line">NO_KEY:                                 </span><br><span class="line">	CLC                     ; 清除进位标志, 表示没有按键按下</span><br><span class="line"></span><br><span class="line">SCAN_EXIT:                                   </span><br><span class="line">	POP     DX</span><br><span class="line">	POP     BX</span><br><span class="line">	RETN</span><br><span class="line">SCAN_KEY        ENDP</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">AllKey	PROC 	NEAR               </span><br><span class="line">                                       </span><br><span class="line">	MOV     DX, 271H</span><br><span class="line">	XOR     AL, AL</span><br><span class="line">	OUT     DX, AL          ; 列输出全0</span><br><span class="line">	INC     DX              ; PC口，PC0和PC1为两个行线，无按键按下是高电平，有按键按下是低电平</span><br><span class="line">	IN      AL, DX</span><br><span class="line">	NOT     AL		; 取反后是无按键按下是低电平，有按键按下是高电平</span><br><span class="line">	AND     AL, 3		; 和3相与，结果是有按键按下结果非零，无按键按下结果为零即ZF = 1</span><br><span class="line">	RETN</span><br><span class="line">AllKey	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="updatedisplay">5.5.3 UpdateDisplay</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/更新显示子程序.png" alt="更新显示子程序" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">; 更新显示子程序</span><br><span class="line">; 输入参数：SI</span><br><span class="line">UpdateDisplay 	PROC 	NEAR</span><br><span class="line">    	PUSH 	AX</span><br><span class="line">	PUSH	DI</span><br><span class="line">	PUSH	CX</span><br><span class="line"></span><br><span class="line">	CMP	Sign, 0</span><br><span class="line">	JZ	uwu</span><br><span class="line">	MOV 	BYTE PTR [SI + 7], 11H</span><br><span class="line">	JMP	uwu1</span><br><span class="line">uwu:	MOV 	BYTE PTR [SI + 7], 00H</span><br><span class="line">uwu1:</span><br><span class="line">    	; 显示位置值</span><br><span class="line">	LEA	DI, [SI + 4]  </span><br><span class="line">	MOV	AX, CurrentPos</span><br><span class="line">	MOV	CX, 3</span><br><span class="line">   	CALL 	ConvertToDisplay</span><br><span class="line">	 </span><br><span class="line">	; 分隔符</span><br><span class="line">	MOV	BYTE PTR [SI + 3], 10H</span><br><span class="line">	; 命令信息</span><br><span class="line">    	MOV	AL, Command</span><br><span class="line">	MOV	[SI + 2], AL</span><br><span class="line"></span><br><span class="line">	POP	CX</span><br><span class="line">    	POP 	DI</span><br><span class="line">    	POP 	AX</span><br><span class="line">    	RET</span><br><span class="line">UpdateDisplay 	ENDP</span><br></pre></td></tr></table></figure>
+<h3 id="converttodisplay">5.5.4 ConvertToDisplay</h3>
+<p><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/ConvertToDisplay.png" alt="ConvertToDisplay" style="zoom:40%;" /></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">;for(int i = 0; i &lt; CX; i++, AX /= 10)</span><br><span class="line">;	DI[i] = AX % 10</span><br><span class="line">;将AX的每一位分别提取出来用于显示</span><br><span class="line">;输入参数：DI, CX, AX</span><br><span class="line">ConvertToDisplay	PROC	NEAR	</span><br><span class="line">	PUSH	BX	</span><br><span class="line">	CLD	</span><br><span class="line">	MOV	BX, 10	</span><br><span class="line">ConvertLoop:</span><br><span class="line">	XOR	DX, DX	</span><br><span class="line">	DIV	BX	;[DX, AX] / BX，商存在AX里，余数在DX里</span><br><span class="line">	XCHG	AX, DX	;交换</span><br><span class="line">	STOSB		;AL -&gt; [(ES:DI)], DI = DI + 1</span><br><span class="line">	MOV	AX, DX	</span><br><span class="line">	LOOP	ConvertLoop</span><br><span class="line">	POP	BX</span><br><span class="line">	RET		</span><br><span class="line">ConvertToDisplay	ENDP</span><br></pre></td></tr></table></figure>
+<h1 id="软硬件调试">6.软硬件调试</h1>
+<ol type="1">
+<li><p>数码管不亮</p>
+<p>调用了Display8但是实验箱的数码管就是不亮，想了一下Display8是怎么实现的，原因是Display8只扫描一遍，而我没有循环重复调用显示数码管，以至于它是灭的。</p></li>
+<li><p>实现F命令时出现PC指针超出范围</p>
+<p>前期我在整个程序的最后，才调用INT
+21H退出程序，但是由于代码太长，有三四百行，而JZ这种跳转指令只能跳转-128
+~
++127范围内的偏移量，显然超出范围了。（虽然后期我没有再把退出程序放到代码最后）
+解决办法：中间加个 JMP 指令接力一下</p></li>
+<li><p>尝试根据转速要求计算延时，但不知道电机的步距角</p>
+<p>我先上网查了一下，好像大多数是1.8度，后来和老师讨论延时的计算时，有同学说这个电机看上去比较小，老师在淘宝上搜了一下微型步进电机，查看了参数，有一个产品的步距角是18度，觉得很像，让我测试一下转一圈是不是20步。我在电机的风扇上粘了一小块透明胶带，作为起始位置，将电机的转速调低，转过一圈时立马停止电机，此时数码管上的记录刚好是20步！</p></li>
+<li><p>除法溢出</p>
+<p>根据之前推导的计算延时的公式：<span class="math inline">\(StepDelay =
+{2000 \over n}\)</span> ，我一开始想我的 <span
+class="math inline">\(n\)</span> 最大只有 99，在 8 个 bit
+之内，就想着采用 16 位的除法，但是没有考虑到：商是存在AL 中的，当 <span
+class="math inline">\(n\)</span> 很小时，比如 <span
+class="math inline">\(n = 1\)</span>，商应该为 2000，显然 AL
+这个8bit当寄存器最大只能存255，就产生的除法溢出。
+解决办法：改用32位的除法。</p></li>
+<li><p>步数减到0后突然从535开始继续递减，而不是999</p>
+<p>这个问题是另一个同学调试我的程序时发现的，我之前还没有注意到这个问题，但是一直没有管这个问题，觉得可能是位置更新有点小问题影响不大，做完后续的其他模块后，我想起来这个问题，打算解决一下，发现问题没我想象的那么简单。</p>
+<p>原本的 UpdatePosition 子程序是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">UpdatePosition 	PROC 	NEAR</span><br><span class="line">    	CMP 	Direction,0</span><br><span class="line">    	JE  	Pos_Inc</span><br><span class="line"></span><br><span class="line">Pos_Dec:</span><br><span class="line">    	DEC 	CurrentPos</span><br><span class="line">    	CMP 	CurrentPos,-1000</span><br><span class="line">    	JNE 	UpdatePos_Exit</span><br><span class="line">    	MOV 	CurrentPos,0</span><br><span class="line">    	JMP 	UpdatePos_Exit</span><br><span class="line"></span><br><span class="line">Pos_Inc:</span><br><span class="line">    	INC 	CurrentPos</span><br><span class="line">    	CMP 	CurrentPos,1000</span><br><span class="line">    	JNE 	UpdatePos_Exit</span><br><span class="line">    	MOV 	CurrentPos,0</span><br><span class="line"></span><br><span class="line">UpdatePos_Exit:</span><br><span class="line">    	RET</span><br><span class="line">UpdatePosition 	ENDP</span><br></pre></td></tr></table></figure>
+<p>逻辑非常简单，是顺时针就将当前位置加一，加到1000变成0，是逆时针就将当前位置减一，减到-1000就变成0。但是在计算机的二进制中0
+- 1 =
+-1，负数是用补码表示的，-1的补码是FFFFH，FFFFH经过ConvertToDisplay（内部是无符号除法）会变成65535，而我数码管显示只取低三位，所以减到0后就从535开始减了，非常合理地解释了我看到的一切！我很高兴的想，那把ConvertToDisplay里的除法改成有符号除法不就行了吗？！假的，FFFFH除以0AH后商是0，余数是FFFFH，按理说余数结果是-1一点没错，但是我数码管支持直接显示'-1'这个数吗？！段码里没有'-1'这个东西吧？毕竟这是一个'-'和一个'1'，用两个数码管来显示的。没有办法，只能分类讨论了（见软件设计相应部分），并且把原本的第7位表示顺时针还是逆时针的定义改成了是正号还是负号。</p></li>
+<li><p>想要让A命令实现暂停/启动的功能而不是单单只能停止，失败</p>
+<p>我想实现暂停/启动的代码是这样的（由于错误的代码没有保存，这里用伪代码描述）：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> bRunning == <span class="number">0</span>:</span><br><span class="line">  bRunning = <span class="number">1</span></span><br><span class="line">  STI</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  bRunning = <span class="number">0</span></span><br><span class="line">  CLI</span><br></pre></td></tr></table></figure>
+结果我按A它都停止不了了，然后我打断点调试的时候发现每次它都进入到第一个分支，溯源一下，发现上面的代码中，执行机收到命令后就停止电机运行了，所以走到A命令的处理时bRunning永远都是0，然后永远开中断让电机运行。但是我确实想用户在给电机新的命令时电机先停止运转，所以就放弃了把A命令实现为暂停/启动的功能。不过现在想来，可以在上面的代码中特判一下A命令，遇到A命令就不像遇到其他命令一样无脑关中断停止电机运转，而是直接进入命令处理环节。</p></li>
+<li><p>8251通信，控制机发过去但是执行机收不到，或者说收到的都是错误标志位拉满的奇怪数据</p>
+<p>找了一个晚上的错，差点以为自己想做通信的念想到此为止了，准备写一对简单的收发程序专门对通信功能进行测试，这样避免了电机的其他部分代码的干扰，写新的测试程序的时候发现，原来执行机的定时器1忘记初始化了，导致两边波特率不一样，所以产生了数据错误。</p></li>
+<li><p>可以收发数据，但是数据错位</p>
+<p>在新的简单测试通信的代码中，我发现发一位数据可以正常接受一位数据，满心欢喜，然后放到电机程序上跑的时候，命令参数可以正确接收并显示，但是位置信息控制机显示的完全不对，简直是一团胡乱的数据，不知道是怎么回事，向老师询问之后说可能是不是错位了，让我写个静态的测一下。我就将之前发一位收一位的测试代码改成了发两位收两位，结果果真是错位了，发21但是收到的显示却是12，发三位791结果收成917。
+我想是不是两次发送之间没有延迟，太快了导致的，就在两次发送之间尝试了很多不同的延时值，但是结果依然都是错位。到底为什么会错位呢？我想尝试单步调试一下寻找原因，但是在我手动控制发送机发一位执行机收一位，一共发收三次传完三个数据的时候，没有错位！全部正常接收了！而且无论重复多少次这个过程都是没有错位，太诡异了。</p>
+<p>我实在是没有办法了，但是这个错位，让我想到了《计算机网络》里有提到过数据错位的问题，我寻思着数据链路层的任务是：封装层帧、透明传输、差错检测。那我将要发送的数据封装成帧是否可行呢？我看了一下要发送的数据，第一个字节（位置的符号位）只有可能是0或者1，就选择了0FAH这个较大的数当作帧头，用0FBH这个字节当作帧尾。在写的时候我还是担心，因为我没有实现透明传输，会不会把中间的正常数据误认为帧头或者帧尾之类的，因为毕竟位置的范围是0～999，包含FA也包含FB，不过先试试看吧。</p>
+<p>要怎么实现封装成帧呢？如果仅仅是发送数据前先调用Sendbyte发送帧头，数据发完再调用帧尾的话，好像太不智能了，我每次发数据都要手动添加这两行代码，接收的时候也是，感觉太冗余了，就又写了一个SendGroup的函数，但是用一个函数的话，我怎么知道要发什么数据，发几个字节？这个好像通过寄存器很难传递，总不能AL是要发送第一个数据，AH是要发送的第二个数据诸如此类吧？借鉴了一下Display8的实现方式，采用存储器来传递数据，即在程序中定义一个缓冲区，我称之为IObuf，将要发送的数据存入这里，函数的入口参数中，SI就存着这个缓冲区的首地址，而CX就存要发送几个字节。</p>
+<p>很可惜，在封装成帧（我的SendGroup）之后，我的数据收发还是不正确，但是单步调试又无法找出问题，有什么办法能在全速运行的情况下还能看到真实的收发数据是什么吗？我没有串口助手，就又开了一个大的存储空间（DATAbuf），专门用来存放收到的数据，存数据的实现就写在RecvByte里，一接受到就存下来，如下注释部分代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">; 接受一个字节，ZF = 0，且将结果存入AL</span><br><span class="line">RecvByte	PROC	NEAR	</span><br><span class="line">	PUSH	DX</span><br><span class="line">	PUSH	BX</span><br><span class="line">	MOV	DX,Con_8251	</span><br><span class="line">	</span><br><span class="line">Wait_Rx:</span><br><span class="line">	; D1: RxRDY，接收器是否准备好</span><br><span class="line">	IN	AL,DX		;读入状态</span><br><span class="line">	TEST	AL,2	</span><br><span class="line">	JZ	Wait_Rx		;有数据吗？</span><br><span class="line">	MOV	DX,Dat_8251	;有</span><br><span class="line">	IN	AL,DX</span><br><span class="line">;	LEA	BX,DATAbuf</span><br><span class="line">;	ADD	BX,COUNT</span><br><span class="line">;	MOV	[BX],AL</span><br><span class="line">;	INC	WORD PTR COUNT</span><br><span class="line">;	LEA	BX, COUNT</span><br><span class="line">;	CMP	COUNT, 100</span><br><span class="line">;	JB	Recv_Exit</span><br><span class="line">;FULL:	</span><br><span class="line">;	MOV	COUNT, 0</span><br><span class="line">Recv_Exit:</span><br><span class="line">	POP	BX</span><br><span class="line">	POP	DX</span><br><span class="line">	RET		</span><br><span class="line">RecvByte	ENDP	</span><br></pre></td></tr></table></figure>
+<p>然后在FULL标记的代码处打一个断点，全速断点后就能在存储器窗口看到收的100个数据了，如下：</p>
+<p><img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/3aad9f3114ef57a4cbc4370d1d63b948.jpg" /></p>
+<p>一帧的数据有三个字节，我们可以从接收到的数据中看出帧尾FB经常会出现两遍，但是帧头只有一个，并且数据的位置信息部分从01
+9A 到 01 9B 到01
+9C等等，看上去是完全正确接收了，那我就回过头来看一下我代码是怎么解析接受到的数据了，这一看就发现，之前手误把高低字节接受的顺序和发送机的搞反了，改完这个问题后，我的机子就实现了正常通信啦。</p></li>
+<li><p>控制机的数码管显示有明显的闪烁</p>
+<p>这是中途问老师问题，老师提出来的，让我把数码管的频率改改，我当时想着这系统时钟不是固定吗？我哪能提高？而且数码管的显示图方便是调用的库函数，也不是自己写的，这库函数我也改不了呀，就一直搁浅了这个问题。写报告的硬件设计部分涉及到了数码管显示的问题，我想起来这个问题，就好好研究了一番，发现库函数设计的扫描频率挺合适的，并且我执行机数码管不怎么闪，就控制机闪，我又回头看了一下我写的代码，坏！答辩的时候老师问我<code>JZ CONTROL_LOOP</code>的作用是什么，我说它如果没有位置更新还要跳回去显示数码管（上一次的值），还要去扫描按键等等，结果我代码里居然没有显示数码管（因为之前大量的简单测试代码，以及帮某人调试代码时都是把Display8放在循环的开头就显示了，以至于我理所当然的认为我的最终代码也是这样的，结果居然不是），只在
+updateDisplay 里显示了，而 updateDisplay
+只有有位置更新的时候才会调用，位置更新是通过8251通信从执行机里接收过来的，通信肯定有延迟吧，怪不得闪的厉害，我觉得原因应该是这样，并且在写报告的时候在循环开头把数码管显示加上去了，只是可惜如今实验室已经关门了，没法再测一下了。</p></li>
+<li><p>单步调试的时候进中断就出不来了</p>
+<p>为了解决一些在中断函数中出现的疑问，常常想单步调试一下中断，在特定情况下再返回主程序，但是一旦在中断里单步，就算把断点撤了，再全速运行，结果还是在中断函数的开头停下来了，哪怕我没在那里打断点。</p>
+<p>解决办法，可以临时加一些在特定条件下才会执行到的代码，然后再此处打上断点，全速断点到这里后再把这个断点删了，再在想回到的主程序的地方打断点，再全速断点，避免在中断函数里进行单步。</p>
+<p>原因解释：首先单步一定是走不出中断程序的，因为我们太慢了，8253定时器是独立于8086工作的，在中断的时候8253的定时器依然在计数，依然在产生中断。至于为什么全速运行也走不出中断，还是会在中断入口处停下，暂时没有找到合理的解释。</p></li>
+</ol>
+<h1 id="设计总结">7.设计总结</h1>
+<h2 id="主要功能实现情况">7.1 主要功能实现情况</h2>
+<p>本设计成功实现了以下功能：</p>
+<ol type="1">
+<li><strong>基本控制功能</strong>：
+<ul>
+<li>步进电机的启停控制</li>
+<li>正反转速度控制（1-99转/分）</li>
+<li>正反向步数控制</li>
+<li>实时位置显示</li>
+</ul></li>
+<li><strong>通信功能</strong>：
+<ul>
+<li>控制机与执行机之间的串行通信</li>
+<li>命令和参数的可靠传输</li>
+<li>位置信息的实时反馈</li>
+</ul></li>
+<li><strong>显示功能</strong>：
+<ul>
+<li>控制机显示当前命令和位置信息</li>
+<li>执行机显示实时位置计数和接收到的命令</li>
+</ul></li>
+</ol>
+<h2 id="技术特点">7.2 技术特点</h2>
+<ol type="1">
+<li><strong>硬件设计</strong>：
+<ul>
+<li>采用<strong>8251</strong>芯片实现TTL电平的串行通信</li>
+<li>使用<strong>8253</strong>定时器实现精确的速度控制</li>
+<li>通过<strong>8259</strong>中断控制器处理定时器中断</li>
+<li>利用<strong>8255</strong>并行接口实现键盘扫描、数码管显示和电机驱动</li>
+</ul></li>
+<li><strong>软件设计</strong>：
+<ul>
+<li>采用<strong>帧格式封装</strong>提高通信可靠性</li>
+<li>实现<strong>位置计数</strong>的正负值显示</li>
+<li>使用<strong>中断方式</strong>控制电机转速</li>
+<li>采用<strong>查表法</strong>实现数码管显示</li>
+</ul></li>
+</ol>
+<h2 id="创新点">7.3 创新点</h2>
+<ol type="1">
+<li><strong>通信可靠性设计</strong>：
+<ul>
+<li>采用帧头(0FAH)和帧尾(0FBH)标识，实现数据包的完整性检验</li>
+<li>通过缓冲区管理提高通信效率</li>
+</ul></li>
+<li><strong>人机交互优化</strong>：
+<ul>
+<li>实现正负位置值的直观显示</li>
+<li>提供实时位置反馈</li>
+<li>支持多种控制模式切换</li>
+</ul></li>
+</ol>
+<h2 id="存在的不足与改进建议">7.4 存在的不足与改进建议</h2>
+<ol type="1">
+<li><strong>功能扩展</strong>：
+<ul>
+<li>增加电机缓启动功能</li>
+<li>实现更多控制模式，如增加选择是单四步还是双四步还是单双八步</li>
+<li>当电机走完设定的步数时用蜂鸣器提醒用户</li>
+</ul></li>
+<li><strong>可靠性提升</strong>：
+<ul>
+<li>完善通信协议，实现透明传输</li>
+<li>添加通信超时处理</li>
+<li>实现数据校验和重传机制</li>
+</ul></li>
+</ol>
+<h1 id="心得体会">8.心得体会</h1>
+<p>初版代码部分借鉴星研的 SUN ES86PCIU+
+使用手册中的综合实验四：步进电机实验
+所提供的代码，最初实现的也是步进电机综合控制实验，想着和远程控制步进电机实验功能基本一样，后期扩展成通信也方便实现。这是我第一次读别人的这么长的汇编代码，读得非常非常难受，基本上是捧着课本在读，好多指令的作用要翻书看一下，好多重复出现的指令的意思也记不住，看到只觉得眼熟，或者大概知道是做什么的，但是具体是从哪个隐含的寄存器放到哪个隐含的寄存器就说不上来了，还得翻书，尤其是串操作类指令，这部分上课也没讲过。这个代码我读了有一两天，边读边加注释，最后感觉对整个运行的框架和流程还是感觉有些不清晰，就照着代码画了一份流程图来帮助我理解，如下：
+<img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/步进电机1.png" />
+此时我觉得我基本上能非常清晰地理解整个代码逻辑了，甚至还见识到了神奇的函数跳转表这种写法，想着照葫芦画瓢是不是就能完成这次实验了，然后发现也没那么容易，命令处理那边好多要改，基本上除了初始化和一些转换的代码外全都重写了。
+好处是这份代码给我提供了控制电机的方式和大体框架，坏处是我读懂代码，且觉得实现的很合理，但是没有细细思索背后这么设计的原因，而直接把大体控制流程复刻到我的实验当中，以至于我回头写报告再细细分析硬件设计部分时，我觉得在目前功能实现较为简单的情况下，可能有更方便的解决办法，如步进电机的延迟处理，可以不用那么麻烦，而是采用我在硬件设计部分提到的重新置计数初值的方式。不过我现在也知道为什么他要这么设计延时方式了，因为他还多一个当电机设置速度过快时缓慢启动的过程，而我没做这个。</p>
+<h1 id="参考文献">9.参考文献</h1>
+<h1 id="答辩记录">10.答辩记录</h1>
+<ol type="1">
+<li><p>Q：你是怎么解决数据错位的？</p>
+<p>A：我在数据发送时添加了帧头和帧尾，只有检测到帧头才开始接收一帧数据。</p></li>
+<li><p>Q：CONTROL_LOOP 的作用是什么？</p>
+<p>A：负责数码管显示的动态刷新和按键状态的定期扫描，维持系统状态的连续性，即使在没有新的位置信息时，系统也需要通过这个循环来维持上一次的显示状态。</p></li>
+</ol>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>"单极步进电机和双极步进电机的区别"
+https://blog.csdn.net/qq_40862304/article/details/106266399<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>"快速上手ULN2003达林顿管阵列，并学会控制步进电机"
+https://www.bilibili.com/video/BV1Uy4y1g7gY/<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>"步进电机的巧妙原理"
+https://www.bilibili.com/video/BV1nA4m1A7Ke/<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>"RS232和RS485通信总线"
+https://blog.csdn.net/m0_61298445/article/details/124108925<a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>"SAB8284B-P Datasheet"
+https://www.alldatasheet.com/html-pdf/45585/SIEMENS/SAB8284B-P/3551/14/SAB8284B-P.html<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>"Intel 8086 Instruction Timing"
+https://www.oocities.org/mc_introtocomputers/Instruction_Timing.PDF<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/12/28/LESSON/centos/" rel="prev" title="Linux 编译内核 与 新增系统调用">
+                  <i class="fa fa-angle-left"></i> Linux 编译内核 与 新增系统调用
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/01/20/CTF/pwn%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="next" title="pwn环境配置">
+                  pwn环境配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">CMing</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
