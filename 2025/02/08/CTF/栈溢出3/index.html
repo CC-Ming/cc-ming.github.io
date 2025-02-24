@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#405477"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/cm.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/cm.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#405477">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":false,"copycode":{"enable":false,"style":"mac"},"fold":{"enable":true,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="静态链接与重定位 以下述c代码为例，我们讨论一下重定位的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="链接与重定位">
+<meta property="og:url" content="http://example.com/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/index.html">
+<meta property="og:site_name" content="CMingの小站">
+<meta property="og:description" content="静态链接与重定位 以下述c代码为例，我们讨论一下重定位的过程">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-02-08T09:20:45.000Z">
+<meta property="article:modified_time" content="2025-02-11T16:00:00.000Z">
+<meta property="article:author" content="CMing-迟明">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/","path":"2025/02/08/CTF/栈溢出3/","title":"链接与重定位"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>链接与重定位 | CMingの小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">CMingの小站</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-friends"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>friends</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5%E4%B8%8E%E9%87%8D%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.</span> <span class="nav-text">静态链接与重定位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E4%B8%8E%E9%87%8D%E5%AE%9A%E4%BD%8D"><span class="nav-number">2.</span> <span class="nav-text">动态链接与重定位</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="CMing-迟明"
+      src="/images/cm.png">
+  <p class="site-author-name" itemprop="name">CMing-迟明</p>
+  <div class="site-description" itemprop="description">Coding with brush</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CC-Ming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CC-Ming" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cm.png">
+      <meta itemprop="name" content="CMing-迟明">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CMingの小站">
+      <meta itemprop="description" content="Coding with brush">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="链接与重定位 | CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          链接与重定位
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-02-08 17:20:45" itemprop="dateCreated datePublished" datetime="2025-02-08T17:20:45+08:00">2025-02-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-02-12 00:00:00" itemprop="dateModified" datetime="2025-02-12T00:00:00+08:00">2025-02-12</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="静态链接与重定位">静态链接与重定位</h2>
+<p>以下述c代码为例，我们讨论一下重定位的过程 <span id="more"></span>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.c</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> sum(a, <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sum.c</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们写一个最小可执行文件，程序入口地址是 <code>_start</code> 而不是
+<code>main</code>，没有用栈来存储数据，所以没有写保存栈帧等的部分，退出程序采用系统调用，sys_exit
+的系统调用号是 60，rdi 为退出程序的返回值，汇编代码如下：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; main.asm</span></span><br><span class="line"><span class="meta">section</span> .data</span><br><span class="line">    a <span class="built_in">dd</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">section</span> .text</span><br><span class="line">    <span class="meta">global</span> _start</span><br><span class="line">    <span class="meta">extern</span> sum</span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">edi</span>, [a]</span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">esi</span>, <span class="number">2</span></span><br><span class="line">    <span class="keyword">call</span> sum</span><br><span class="line"></span><br><span class="line">    <span class="comment">;exit</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">edi</span>, <span class="built_in">eax</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="number">60</span></span><br><span class="line">    <span class="keyword">syscall</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; sum.asm</span></span><br><span class="line"><span class="meta">section</span> .text</span><br><span class="line"><span class="meta">global</span> sum </span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">sum:</span></span><br><span class="line">    <span class="keyword">lea</span> <span class="built_in">eax</span>, [<span class="built_in">edi</span> + <span class="built_in">esi</span>]</span><br><span class="line">    <span class="keyword">ret</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当操作数是变量/标签时，LEA计算的是该变量在内存中的地址</p>
+<p>当操作数是寄存器时，LEA计算的是寄存器中的值</p>
+</blockquote>
+<p>编译链接过程如下： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nasm -f elf64 main.asm -o main.o</span><br><span class="line">nasm -f elf64 sum.asm -o sum.o</span><br><span class="line">ld main.o sum.o -o proc</span><br></pre></td></tr></table></figure></p>
+<p>查看 main.o 的反汇编代码：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ubuntu</span>:~/test$ objdump -d main.o</span><br><span class="line"></span><br><span class="line"><span class="attribute">main</span>.o:     file format elf64-x86-<span class="number">64</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attribute">Disassembly</span> of section .text:</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000000000</span> &lt;_start&gt;:</span><br><span class="line">   <span class="attribute">0</span>:   <span class="number">8</span>b <span class="number">3</span>c <span class="number">25</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>    mov    <span class="number">0</span>x0,%edi</span><br><span class="line">   <span class="attribute">7</span>:   be <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    $<span class="number">0</span>x2,%esi</span><br><span class="line">   <span class="attribute">c</span>:   e8 <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          call   <span class="number">11</span> &lt;_start+<span class="number">0</span>x11&gt;</span><br><span class="line">  <span class="attribute">11</span>:   <span class="number">89</span> c7                   mov    %eax,%edi</span><br><span class="line">  <span class="attribute">13</span>:   b8 <span class="number">3</span>c <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    $<span class="number">0</span>x3c,%eax</span><br><span class="line">  <span class="attribute">18</span>:   <span class="number">0</span>f <span class="number">05</span>                   syscall</span><br></pre></td></tr></table></figure>
+<p>查看 main.o 的符号表 ：</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/test$ objdump -r main.o</span><br><span class="line"></span><br><span class="line">main.o:     <span class="keyword">file</span> <span class="keyword">format</span> elf64-x86-<span class="number">64</span></span><br><span class="line"></span><br><span class="line">RELOCATION RECORDS FOR [.text]:</span><br><span class="line">OFFSET           <span class="keyword">TYPE</span>              <span class="keyword">VALUE</span></span><br><span class="line"><span class="number">0000000000000003</span> R_X86_64_32S      .<span class="keyword">data</span></span><br><span class="line"><span class="number">000000000000000</span>d R_X86_64_PC32     <span class="built_in">sum</span>-<span class="number">0</span>x0000000000000004</span><br></pre></td></tr></table></figure>
+<p>有两个需要重定位的符号，一个是数据段的地址，另一个是 <code>sum</code>
+函数的地址，其中的 OFFSET（偏移）的查看方式是: <figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">地址：  <span class="number"> 0 </span><span class="number"> 1 </span><span class="number"> 2 </span><span class="number"> 3 </span><span class="number"> 4 </span><span class="number"> 5 </span> 6</span><br><span class="line">机器码   8b 3c<span class="number"> 25 </span>00<span class="number"> 00 </span>00<span class="number"> 00 </span>   mov    0x0,%edi</span><br></pre></td></tr></table></figure>
+这一句原本的汇编是：<code>mov edi, [a]</code>
+即将变量a的值存入寄存器edi，所以我们需要知道变量a的地址，即数据段的起始地址。但这在编译时是未知的，因此用
+0 来填充，即地址 3～6
+的部分。所以OFFSET是3，因为这是链接器需要修改的指令的部分的起始地址</p>
+<p>类型 R_X86_64_32S 是32位绝对地址，值为 .data，即告诉链接器将标签
+.data 的地址写入偏移为 0x3 的地方<br />
+R_X86_64_PC32 是32位PC相对寻址，值为 sum -
+4，即告诉链接器将（标签sum的地址 - （.text + OFFSET +
+4））写入偏移为0xd的地方，其中 4 为
+sum函数地址的字节数，因为运行到这条指令时，PC已经指向下一条指令，而
+.text + OFFSET + 4 =
+下一条指令的起始地址，这样运行到这条指令时，就会跳转到 PC + sum - (.text
++ OFFSET + 4) = PC + sum - PC = sum函数的地址，从而正确跳转</p>
+<p>查看链接后的程序符号表，和段地址：</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/test$ readelf -l -s <span class="keyword">proc</span><span class="title"></span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title">Elf</span> file<span class="title"> type</span> is<span class="title"> EXEC</span> (Executable<span class="title"> file)</span></span><br><span class="line">Entry<span class="title"> point</span> 0x401000<span class="title"></span></span><br><span class="line"><span class="title">There</span> are 3<span class="title"> program</span> headers,<span class="title"> starting</span> at<span class="title"> offset</span> 64<span class="title"></span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title">Program</span> Headers:<span class="title"></span></span><br><span class="line"><span class="title">  Type</span> <span class="title">          Offset</span> <span class="title">            VirtAddr</span> <span class="title">          PhysAddr</span></span><br><span class="line"><span class="title">                 FileSiz</span> <span class="title">           MemSiz</span> <span class="title">             Flags</span> <span class="title"> Align</span></span><br><span class="line"><span class="title">  LOAD</span>           0x0000000000000000 0x0000000000400000 0x0000000000400000</span><br><span class="line">                 0x00000000000000e8 0x00000000000000e8<span class="title">  R</span>      0x1000<span class="title"></span></span><br><span class="line"><span class="title">  LOAD</span>           0x0000000000001000 0x0000000000401000 0x0000000000401000</span><br><span class="line">                 0x0000000000000025 0x0000000000000025<span class="title">  R</span> E    0x1000<span class="title"></span></span><br><span class="line"><span class="title">  LOAD</span>           0x0000000000002000 0x0000000000402000 0x0000000000402000</span><br><span class="line">                 0x0000000000000004 0x0000000000000004<span class="title">  RW</span>     0x1000<span class="title"></span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title"> Section</span> to<span class="title"> Segment</span> mapping:<span class="title"></span></span><br><span class="line"><span class="title">  Segment</span> Sections...</span><br><span class="line">   00</span><br><span class="line">   01     .text</span><br><span class="line">   02     .data<span class="title"></span></span><br><span class="line"><span class="title"></span></span><br><span class="line"><span class="title">Symbol</span> table &#x27;.symtab&#x27;<span class="title"> contains</span> 9<span class="title"> entries:</span></span><br><span class="line"><span class="title">   Num:</span> <span class="title">   Value</span> <span class="title">         Size</span> Type<span class="title">    Bind</span> <span class="title">  Vis</span> <span class="title">     Ndx</span> Name</span><br><span class="line">     0: 0000000000000000     0<span class="title"> NOTYPE</span> <span class="title"> LOCAL</span> <span class="title"> DEFAULT</span> <span class="title"> UND</span></span><br><span class="line">     1: 0000000000000000     0<span class="title"> FILE</span> <span class="title">   LOCAL</span> <span class="title"> DEFAULT</span> <span class="title"> ABS</span> main.asm</span><br><span class="line">     2: 0000000000402000     0<span class="title"> NOTYPE</span> <span class="title"> LOCAL</span> <span class="title"> DEFAULT</span>    2<span class="title"> a</span></span><br><span class="line">     3: 0000000000000000     0<span class="title"> FILE</span> <span class="title">   LOCAL</span> <span class="title"> DEFAULT</span> <span class="title"> ABS</span> sum.asm</span><br><span class="line">     4: 0000000000401020     0<span class="title"> NOTYPE</span> <span class="title"> GLOBAL</span> DEFAULT    1<span class="title"> sum</span></span><br><span class="line">     5: 0000000000401000     0<span class="title"> NOTYPE</span> <span class="title"> GLOBAL</span> DEFAULT    1<span class="title"> _start</span></span><br><span class="line">     6: 0000000000402004     0<span class="title"> NOTYPE</span> <span class="title"> GLOBAL</span> DEFAULT    2<span class="title"> __bss_start</span></span><br><span class="line">     7: 0000000000402004     0<span class="title"> NOTYPE</span> <span class="title"> GLOBAL</span> DEFAULT    2<span class="title"> _edata</span></span><br><span class="line">     8: 0000000000402008     0<span class="title"> NOTYPE</span> <span class="title"> GLOBAL</span> DEFAULT    2<span class="title"> _end</span></span><br><span class="line">     </span><br></pre></td></tr></table></figure>
+<p>我们可以看到，链接时<br />
+代码段(.text ) 的起始地址是 0x401000，从这一行
+<code>LOAD           0x0000000000001000 0x0000000000401000 0x0000000000401000</code><br />
+数据段(.data) 的起始地址是 0x402000，从这一行
+<code>LOAD           0x0000000000002000 0x0000000000402000 0x0000000000402000</code><br />
+sum 的地址是 0x401020，从这一行
+<code>4: 0000000000401020     0 NOTYPE  GLOBAL DEFAULT    1 sum</code><br />
+其中第一段（没有名字的那一段）是 ELF头和其他信息</p>
+<p>依据之前的分析，OFFSET为 0x3 的机器码处应该修改为 a 的地址，即
+0x402000<br />
+OFFSET为 0xd 的机器码处应该修改为 sum 的相对PC偏移地址，即 0x401020 -
+(0x401000 + 0xd + 0x4) = 0xf</p>
+<p>我们查看一下 proc 的反汇编来验证一下结果：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ubuntu</span>:~/test$ objdump -d proc</span><br><span class="line"></span><br><span class="line"><span class="attribute">proc</span>:     file format elf64-x86-<span class="number">64</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attribute">Disassembly</span> of section .text:</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000401000</span> &lt;_start&gt;:</span><br><span class="line">  <span class="attribute">401000</span>:       <span class="number">8</span>b <span class="number">3</span>c <span class="number">25</span> <span class="number">00</span> <span class="number">20</span> <span class="number">40</span> <span class="number">00</span>    mov    <span class="number">0</span>x402000,%edi</span><br><span class="line">  <span class="attribute">401007</span>:       be <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    $<span class="number">0</span>x2,%esi</span><br><span class="line">  <span class="attribute">40100c</span>:       e8 <span class="number">0</span>f <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          call   <span class="number">401020</span> &lt;sum&gt;</span><br><span class="line">  <span class="attribute">401011</span>:       <span class="number">89</span> c7                   mov    %eax,%edi</span><br><span class="line">  <span class="attribute">401013</span>:       b8 <span class="number">3</span>c <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    $<span class="number">0</span>x3c,%eax</span><br><span class="line">  <span class="attribute">401018</span>:       <span class="number">0</span>f <span class="number">05</span>                   syscall</span><br><span class="line">  <span class="attribute">40101a</span>:       <span class="number">66</span> <span class="number">0</span>f <span class="number">1</span>f <span class="number">44</span> <span class="number">00</span> <span class="number">00</span>       nopw   <span class="number">0</span>x0(%rax,%rax,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000401020</span> &lt;sum&gt;:</span><br><span class="line">  <span class="attribute">401020</span>:       <span class="number">67</span> <span class="number">8</span>d <span class="number">04</span> <span class="number">37</span>             lea    (%edi,%esi,<span class="number">1</span>),%eax</span><br><span class="line">  <span class="attribute">401024</span>:       c3                      ret</span><br></pre></td></tr></table></figure>
+<p>可以看到偏移为 3、4、5、6 处的机器码为 00 20 40 00
+，小端序（高高低低），读取后为 00 40 20 00<br />
+偏移为 d、e、f、0x10处的机器码为 0f 00 00 00，小端序，读取后为 00 00 00
+0f<br />
+均正确</p>
+<p>那么为什么代码段加载至 0x401000 呢？我们可以用
+<code>ld --verbose</code>
+命令查看链接器的默认脚本内容，其中有如下内容（只截取部分）：</p>
+<ul>
+<li><p>这里指定了程序入口点是 <code>_start</code> 而不是我们熟知的
+<code>main</code> <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">ENTRY</span><span class="params">(_start)</span></span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>这里设置了可执行文件在内存中的起始地址（包括 ELF
+头），从0x400000开始 <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">PROVIDE</span> (__executable_start = SEGMENT_START(<span class="string">&quot;text-segment&quot;</span>, <span class="number">0x400000</span>));</span><br><span class="line">. = SEGMENT_START(<span class="string">&quot;text-segment&quot;</span>, <span class="number">0x400000</span>) + SIZEOF_HEADERS;</span><br></pre></td></tr></table></figure> PROVIDE
+创建一个符号，但仅当该符号未被其他地方定义时才生效，基本语法
+<code>PROVIDE(symbol = expression);</code> SEGMENT_START("segment-name",
+default-value)，如果通过 -Ttext-segment=addr
+等链接器选项指定了地址，返回指定的地址，否则返回 default-value 参数值
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认情况</span></span><br><span class="line">ld main.o -o proc</span><br><span class="line"><span class="comment"># 默认从 0x400000 开始</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定地址</span></span><br><span class="line">ld main.o -o proc -Ttext-segment=0x500000</span><br><span class="line"><span class="comment"># 从 0x500000 开始</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>这里指定了各个段的对齐方式为页对齐（4KB对齐） <figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. <span class="operator">=</span> ALIGN(CONSTANT (MAXPAGESIZE))<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+ALIGN(value)返回下一个按value字节对齐的地址</p></li>
+</ul>
+<p>由于我们是最小可执行文件，没有链接动态库，且是静态链接，所以很多段都不存在，简化版的大致结构如下：</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">SECTIONS</span> &#123;</span><br><span class="line">    <span class="comment">/* 设置程序起始地址为0x400000 */</span></span><br><span class="line">    PROVIDE (__executable_start = SEGMENT_START(<span class="string">&quot;text-segment&quot;</span>, <span class="number">0x400000</span>))<span class="comment">;</span></span><br><span class="line">    <span class="comment">/* 实际代码段起始地址需要加上头部大小 */</span></span><br><span class="line">    . = SEGMENT_START(<span class="string">&quot;text-segment&quot;</span>, <span class="number">0x400000</span>) + SIZEOF_HEADERS<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 移动位置计数器到代码段起始位置 */</span></span><br><span class="line">    . = <span class="meta">ALIGN</span>(CONSTANT (MAXPAGESIZE))<span class="comment">;  /* 确保页对齐到0x401000 */</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">.text</span> : &#123;</span><br><span class="line">        *(<span class="meta">.text</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 数据段页对齐*/</span></span><br><span class="line">    . = <span class="meta">ALIGN</span>(CONSTANT(MAXPAGESIZE))<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">.data</span> : &#123;</span><br><span class="line">        *(<span class="meta">.data</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述过程虽实现简单，运行时无额外开销，但是调用外部函数时需要在链接时就确定函数地址，我们在正常写程序的过程中，经常会调用c标准库的一些函数如
+<code>printf</code> ，按照上述方式的静态链接，<code>printf</code>
+的代码会被复制到每个运行进程的代码段当中，浪费系统的内存资源，因此我们考虑能否共享</p>
+<h2 id="动态链接与重定位">动态链接与重定位</h2>
+<blockquote>
+<p>共享库是致力于解决静态库缺陷的一个现代创新产物，共享库是一个目标模块，在运行或加载时，可以加载到任意的内存地址，并和一个在内存中的程序链接起来。这个过程称为动态链接，是由一个叫做动态链接器的程序来执行的。共享库在Linux系统中通常用.so后缀来表示，微软的操作系统也大量地使用了共享库，它们称为DLL（动态链接库）。</p>
+<p>在任何给定的文件系统中，对于一个库只有一个.so文件，所有引用该库的可执行目标文件共享这个.so文件中的代码和数据，而不是像静态库的内容那样被复制和嵌入到引用它们的可执行文件中。链接器会复制一些重定位和符号表的信息，使得运行时可以解析对.so文件中代码和数据的引用。</p>
+</blockquote>
+<p>为了更好的展示，我们在 sum 里多加几个函数：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; sum.asm</span></span><br><span class="line"><span class="meta">section</span> .text</span><br><span class="line"><span class="meta">global</span> sum</span><br><span class="line"><span class="meta">global</span> <span class="keyword">mul</span></span><br><span class="line"><span class="meta">global</span> <span class="keyword">sub</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">sum:</span></span><br><span class="line">    <span class="keyword">lea</span> <span class="built_in">eax</span>, [<span class="built_in">edi</span> + <span class="built_in">esi</span>]</span><br><span class="line">    <span class="keyword">ret</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">mul:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="built_in">edi</span></span><br><span class="line">    <span class="keyword">imul</span> <span class="built_in">eax</span>, <span class="built_in">esi</span></span><br><span class="line">    <span class="keyword">ret</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">sub:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="built_in">edi</span></span><br><span class="line">    <span class="keyword">sub</span> <span class="built_in">eax</span>, <span class="built_in">esi</span></span><br><span class="line">    <span class="keyword">ret</span></span><br></pre></td></tr></table></figure>
+<p>重新编译，并将 <code>sum.o</code> 链接成一个共享库：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/<span class="keyword">test</span>$ nasm -f elf64 <span class="keyword">sum</span>.asm -o <span class="keyword">sum</span>.o</span><br><span class="line">ubuntu:~/<span class="keyword">test</span>$ ld -shared <span class="keyword">sum</span>.o -o libsum.<span class="keyword">so</span></span><br></pre></td></tr></table></figure>
+<p>修改 <code>main.asm</code> 为：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; main.asm</span></span><br><span class="line"><span class="meta">section</span> .data</span><br><span class="line">    a <span class="built_in">dd</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="meta">section</span> .text</span><br><span class="line">    <span class="meta">global</span> _start</span><br><span class="line">    <span class="meta">extern</span> sum</span><br><span class="line">    <span class="meta">extern</span> <span class="keyword">sub</span></span><br><span class="line"><span class="symbol"></span></span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">edi</span>, [a]</span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">esi</span>, <span class="number">2</span></span><br><span class="line">    <span class="keyword">call</span> sum <span class="built_in">wrt</span> ..plt</span><br><span class="line"></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">edi</span>, <span class="built_in">eax</span></span><br><span class="line">    <span class="keyword">call</span> <span class="keyword">sub</span> <span class="built_in">wrt</span> ..plt</span><br><span class="line"></span><br><span class="line">    <span class="comment">;exit</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">edi</span>, <span class="built_in">eax</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="number">60</span></span><br><span class="line">    <span class="keyword">syscall</span></span><br></pre></td></tr></table></figure>
+<p>链接时需指定动态链接器，Linux系统在运行时查找共享库有几个默认的位置（如/lib,
+/usr/lib等），但当前目录（.）不在默认搜索路径中，使用 rpath 添加路径，
+$ORIGIN 表示可执行文件所在的目录</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/test$ nasm -f elf64 <span class="selector-tag">main</span><span class="selector-class">.asm</span> -o <span class="selector-tag">main</span><span class="selector-class">.o</span></span><br><span class="line">ubuntu:~/test$ ld <span class="selector-tag">main</span><span class="selector-class">.o</span> libsum<span class="selector-class">.so</span> -o prog <span class="attr">--dynamic-linker</span> /lib64/ld-linux-x86-<span class="number">64</span><span class="selector-class">.so</span>.<span class="number">2</span> -rpath \<span class="variable">$ORIGIN</span></span><br></pre></td></tr></table></figure>
+<p>查看 main.o 的重定位表</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/test$ objdump -r main.o</span><br><span class="line"></span><br><span class="line">main.o:     <span class="keyword">file</span> <span class="keyword">format</span> elf64-x86-<span class="number">64</span></span><br><span class="line"></span><br><span class="line">RELOCATION RECORDS FOR [.text]:</span><br><span class="line">OFFSET           <span class="keyword">TYPE</span>              <span class="keyword">VALUE</span></span><br><span class="line"><span class="number">0000000000000003</span> R_X86_64_32S      .<span class="keyword">data</span></span><br><span class="line"><span class="number">000000000000000</span>d R_X86_64_PLT32    <span class="built_in">sum</span>-<span class="number">0</span>x0000000000000004</span><br><span class="line"><span class="number">0000000000000014</span> R_X86_64_PLT32    sub-<span class="number">0</span>x0000000000000004</span><br></pre></td></tr></table></figure>
+<p>我们发现与之前相比，sum的重定位条目的类型从 R_X86_64_PC32 变成了
+R_X86_64_PLT32</p>
+<p>查看 prog 的反汇编代码：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">ubuntu</span>:~/test$ objdump -d prog</span><br><span class="line"></span><br><span class="line"><span class="attribute">prog</span>:     file format elf64-x86-<span class="number">64</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attribute">Disassembly</span> of section .plt:</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000401000</span> &lt;sum@plt-<span class="number">0</span>x10&gt;:</span><br><span class="line">  <span class="attribute">401000</span>:       ff <span class="number">35</span> ea <span class="number">1</span>f <span class="number">00</span> <span class="number">00</span>       push   <span class="number">0</span>x1fea(%rip)        # <span class="number">402</span>ff0 &lt;_GLOBAL_OFFSET_TABLE_+<span class="number">0</span>x8&gt;</span><br><span class="line">  <span class="attribute">401006</span>:       ff <span class="number">25</span> ec <span class="number">1</span>f <span class="number">00</span> <span class="number">00</span>       jmp    *<span class="number">0</span>x1fec(%rip)        # <span class="number">402</span>ff8 &lt;_GLOBAL_OFFSET_TABLE_+<span class="number">0</span>x10&gt;</span><br><span class="line">  <span class="attribute">40100c</span>:       <span class="number">0</span>f <span class="number">1</span>f <span class="number">40</span> <span class="number">00</span>             nopl   <span class="number">0</span>x0(%rax)</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000401010</span> &lt;sum@plt&gt;:</span><br><span class="line">  <span class="attribute">401010</span>:       ff <span class="number">25</span> ea <span class="number">1</span>f <span class="number">00</span> <span class="number">00</span>       jmp    *<span class="number">0</span>x1fea(%rip)        # <span class="number">403000</span> &lt;sum&gt;</span><br><span class="line">  <span class="attribute">401016</span>:       <span class="number">68</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          push   $<span class="number">0</span>x0</span><br><span class="line">  <span class="attribute">40101b</span>:       e9 e0 ff ff ff          jmp    <span class="number">401000</span> &lt;sum@plt-<span class="number">0</span>x10&gt;</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000401020</span> &lt;sub@plt&gt;:</span><br><span class="line">  <span class="attribute">401020</span>:       ff <span class="number">25</span> e2 <span class="number">1</span>f <span class="number">00</span> <span class="number">00</span>       jmp    *<span class="number">0</span>x1fe2(%rip)        # <span class="number">403008</span> &lt;sub&gt;</span><br><span class="line">  <span class="attribute">401026</span>:       <span class="number">68</span> <span class="number">01</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          push   $<span class="number">0</span>x1</span><br><span class="line">  <span class="attribute">40102b</span>:       e9 d0 ff ff ff          jmp    <span class="number">401000</span> &lt;sum@plt-<span class="number">0</span>x10&gt;</span><br><span class="line"></span><br><span class="line"><span class="attribute">Disassembly</span> of section .text:</span><br><span class="line"></span><br><span class="line"><span class="attribute">0000000000401030</span> &lt;_start&gt;:</span><br><span class="line">  <span class="attribute">401030</span>:       <span class="number">8</span>b <span class="number">3</span>c <span class="number">25</span> <span class="number">10</span> <span class="number">30</span> <span class="number">40</span> <span class="number">00</span>    mov    <span class="number">0</span>x403010,%edi</span><br><span class="line">  <span class="attribute">401037</span>:       be <span class="number">02</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    $<span class="number">0</span>x2,%esi</span><br><span class="line">  <span class="attribute">40103c</span>:       e8 cf ff ff ff          call   <span class="number">401010</span> &lt;sum@plt&gt;</span><br><span class="line">  <span class="attribute">401041</span>:       <span class="number">89</span> c7                   mov    %eax,%edi</span><br><span class="line">  <span class="attribute">401043</span>:       e8 d8 ff ff ff          call   <span class="number">401020</span> &lt;sub@plt&gt;</span><br><span class="line">  <span class="attribute">401048</span>:       <span class="number">89</span> c7                   mov    %eax,%edi</span><br><span class="line">  <span class="attribute">40104a</span>:       b8 <span class="number">3</span>c <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>          mov    $<span class="number">0</span>x3c,%eax</span><br><span class="line">  <span class="attribute">40104f</span>:       <span class="number">0</span>f <span class="number">05</span>                   syscall</span><br></pre></td></tr></table></figure>
+<p>PLT表的结构：</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">; PLT[0]：PLT 表的第一项，也就是 sum@plt-0x10</span><br><span class="line">401000:       ff<span class="number"> 35 </span>ea 1f<span class="number"> 00 </span>00   push   0x1fea(%rip)    <span class="comment"># 压入 GOT[1]</span></span><br><span class="line">401006:       ff<span class="number"> 25 </span>ec 1f<span class="number"> 00 </span>00   jmp    *0x1fec(%rip)   <span class="comment"># 跳转到 GOT[2]</span></span><br><span class="line">40100c:       0f 1f<span class="number"> 40 </span>00         nopl   0x0(%rax)       <span class="comment"># 对齐用的 NOP</span></span><br><span class="line"></span><br><span class="line">; PLT[1]：sum 函数的 PLT 项</span><br><span class="line">401010:       ff<span class="number"> 25 </span>ea 1f<span class="number"> 00 </span>00   jmp    *0x1fea(%rip)   <span class="comment"># 跳转到 GOT[3]</span></span><br><span class="line">401016:      <span class="number"> 68 </span>00<span class="number"> 00 </span>00<span class="number"> 00 </span>     push   $0x0            <span class="comment"># 压入重定位索引(0)</span></span><br><span class="line">40101b:       e9 e0 ff ff ff      jmp   <span class="number"> 401000 </span>         <span class="comment"># 跳转到 PLT[0]</span></span><br><span class="line"></span><br><span class="line">; PLT[2]: sub 函数的 PLT 项</span><br><span class="line">401020:       ff<span class="number"> 25 </span>e2 1f<span class="number"> 00 </span>00   jmp    *0x1fe2(%rip)   <span class="comment"># 跳转到 GOT[4]</span></span><br><span class="line">401026:      <span class="number"> 68 </span>01<span class="number"> 00 </span>00<span class="number"> 00 </span>     push   $0x1            <span class="comment"># 压入重定位索引(1)</span></span><br><span class="line">40102b:       e9 d0 ff ff ff      jmp   <span class="number"> 401000 </span>         <span class="comment"># 跳转到 PLT[0]</span></span><br></pre></td></tr></table></figure>
+<p>查看动态重定位记录，可以看到 sum 是第一条记录，所以 sum
+的重定位索引是 0， sub 是第二条记录，所以 sub 的重定位索引是 1</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/<span class="keyword">test</span>$ objdump -R <span class="keyword">prog</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">prog</span>:     <span class="keyword">file</span> <span class="keyword">format</span> elf64-x86-64</span><br><span class="line"></span><br><span class="line">DYNAMIC RELOCATION RECORDS</span><br><span class="line">OFFSET           <span class="keyword">TYPE</span>              VALUE</span><br><span class="line">0000000000403000 R_X86_64_JUMP_SLOT  <span class="keyword">sum</span></span><br><span class="line">0000000000403008 R_X86_64_JUMP_SLOT  sub</span><br></pre></td></tr></table></figure>
+<p>上面的 OFFSET (0x403000等) 是 GOT
+表项的地址，也就是需要被修改的位置</p>
+<p>查看 GOT 表的内容：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ubuntu:~/test$ readelf <span class="params">-x</span> .got.plt prog</span><br><span class="line"></span><br><span class="line">Hex dump of section <span class="string">&#x27;.got.plt&#x27;</span>:</span><br><span class="line"> NOTE: This section has relocations against it, but these have <span class="literal">NOT</span> been applied <span class="keyword">to</span> this dump.</span><br><span class="line">  <span class="number">0x00402fe8</span> b82e4000 <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000000</span> ..@<span class="params">...</span><span class="params">...</span><span class="params">...</span><span class="params">...</span>.</span><br><span class="line">  <span class="number">0x00402ff8</span> <span class="number">00000000</span> <span class="number">00000000</span> <span class="number">16104000</span> <span class="number">00000000</span> <span class="params">...</span><span class="params">...</span><span class="params">...</span>.@<span class="params">...</span>..</span><br><span class="line">  <span class="number">0x00403008</span> <span class="number">26104000</span> <span class="number">00000000</span>                   &amp;.@<span class="params">...</span>..</span><br></pre></td></tr></table></figure>
+<ul>
+<li>GOT[0]（0x402fe8）: .dynamic 段的地址（b82e4000 00000000 (小端序)
+=&gt; 0x402eb88）</li>
+<li>GOT[1]（0x402ff0）: 包含动态链接器标识信息，初值为（00000000
+00000000），加载时动态链接器会填充为正确信息</li>
+<li>GOT[2]（0x402ff8）:
+动态链接器用于解析函数地址的入口点，初值为（00000000
+00000000），加载时动态链接器会填充为正确信息</li>
+<li>GOT[3]（0x403000）: 初值为 PLT[1] 的第二条指令的地址（16104000
+00000000 =&gt; 0x401016），解析后为 sum 函数的地址</li>
+<li>GOT[4]（0x403008）: 初值为 PLT[2] 的第二条指令的地址（26104000
+00000000 =&gt; 0x401026），解析后为 sub 函数的地址</li>
+</ul>
+<p>所以当程序首次调用 sum 函数时，执行流程如下：</p>
+<ol type="1">
+<li>跳转到 PLT[1]，执行 jmp *0x1fea(%rip)，此时 GOT[3] 中存放的是 PLT[1]
+的第二条指令地址(0x401016)</li>
+<li>跳转到 0x401016，执行 push $0x0，将重定位索引压栈</li>
+<li>跳转到 PLT[0]，执行：
+<ul>
+<li>push GOT[1] - 压入动态链接器需要的信息</li>
+<li>jmp *GOT[2] - 跳转到动态链接器的函数解析例程</li>
+</ul></li>
+<li>动态链接器的解析过程：
+<ul>
+<li>动态链接器根据重定位索引找到对应的重定位记录</li>
+<li>查找符号，解析出 sum 函数的实际地址</li>
+<li>将该地址写入 GOT[3]</li>
+<li>跳转到解析出的地址，执行 sum 函数</li>
+</ul></li>
+</ol>
+<p>后续若再次调用 sum 函数时，PLT[1] 中的 jmp *GOT[3]
+会直接跳转到已解析的函数地址，不再需要经过动态链接器，提高了执行效率</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/02/06/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/" rel="prev" title="栈溢出(ret2syscall)">
+                  <i class="fa fa-angle-left"></i> 栈溢出(ret2syscall)
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">CMing-迟明</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
