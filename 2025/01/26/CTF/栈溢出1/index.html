@@ -127,13 +127,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -246,7 +246,7 @@ C/C++缺省调用约定，参数从右向左入栈，返回值在eax中，由调
 </ol>
 <p>以 __cdecl 为例，调用 <code>int fun(int a, int b)</code>
 这个函数的过程如下：</p>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; 调用者</span></span><br><span class="line"><span class="comment">; 函数参数从右向左入栈</span></span><br><span class="line"><span class="keyword">push</span> b</span><br><span class="line"><span class="keyword">push</span> a</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> fun        <span class="comment">; 等价于 push eip（保存返回地址）   ; jmp max 两条指令</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add</span> <span class="built_in">esp</span>, <span class="number">8</span>      <span class="comment">; 调用者清理栈（8 是因为调用 fun 压入了两个四字节的参数）</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; 调用者</span></span><br><span class="line"><span class="comment">; 函数参数从右向左入栈</span></span><br><span class="line"><span class="keyword">push</span> b</span><br><span class="line"><span class="keyword">push</span> a</span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> fun        <span class="comment">; 等价于 push eip（保存返回地址）   ; jmp fun 两条指令</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add</span> <span class="built_in">esp</span>, <span class="number">8</span>      <span class="comment">; 调用者清理栈（8 是因为调用 fun 压入了两个四字节的参数）</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; 被调用者（函数自身）</span></span><br><span class="line"><span class="keyword">push</span> <span class="built_in">ebp</span>        <span class="comment">; 保存上一个栈帧的栈底</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; 开辟新的栈帧</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ebp</span>, <span class="built_in">esp</span>    <span class="comment">; 以上一个栈帧的栈顶为新栈帧的栈底</span></span><br><span class="line"><span class="keyword">sub</span> <span class="built_in">esp</span>, <span class="number">12</span>     <span class="comment">; 为局部变量、临时数据等分配空间（先开辟空间后赋值）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">; ...</span></span><br><span class="line"><span class="comment">; 假设变量都是四字节，则如下依次类推</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">dword</span> [<span class="built_in">ebp</span>-<span class="number">4</span>], <span class="number">10</span>   <span class="comment">; 第一个变量</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">dword</span> [<span class="built_in">ebp</span>-<span class="number">8</span>], <span class="number">20</span>   <span class="comment">; 第二个变量</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">dword</span> [<span class="built_in">ebp</span>-<span class="number">12</span>], <span class="number">30</span>  <span class="comment">; 第三个变量</span></span><br><span class="line"><span class="comment">; ...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">eax</span>, ret_val    <span class="comment">; 保存返回值</span></span><br><span class="line"><span class="keyword">leave</span>   <span class="comment">; 等价于 mov esp, ebp  ; pop ebp 两条指令，即恢复为上一个栈帧</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ret</span> <span class="comment">; 等价于 pop eip，即将返回地址出栈给 eip</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p><strong>图示栈的结构</strong>：</p>
 <p><img
@@ -300,7 +300,7 @@ target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/st
 就会修改段的权限设置，将没有必要的权限移除，比如数据段不需要可执行权限等</p>
 <h4 id="canary">3. Canary</h4>
 <p>Canary
-就是在ebp的位置上方插入一条独特的数据，这个数据是不可预测的，在执行某些重要操作前会首先检测这个数据有没有被改动，如果被改动了则进程会直接退出，避免栈溢出</p>
+就是在ebp的位置向低地址方向插入一条独特的数据，这个数据是不可预测的，在执行某些重要操作前会首先检测这个数据有没有被改动，如果被改动了则进程会直接退出，避免栈溢出</p>
 <h3 id="例题">例题</h3>
 <p>以 <a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/2934">[HNCTF 2022 Week1]
 ret2shellcode</a> 为例</p>
@@ -344,7 +344,7 @@ src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/20250205191402.png" /></
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2025/02/06/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/" rel="next" title="栈溢出(ret2syscall)">
+                <a href="/2025/02/07/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/" rel="next" title="栈溢出(ret2syscall)">
                   栈溢出(ret2syscall) <i class="fa fa-angle-right"></i>
                 </a>
             </div>

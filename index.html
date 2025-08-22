@@ -123,13 +123,13 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -160,7 +160,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/08/21/CTF/sql_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/cm.png">
@@ -178,7 +178,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/" class="post-title-link" itemprop="url">链接与重定位</a>
+          <a href="/2025/08/21/CTF/sql_1/" class="post-title-link" itemprop="url">SQL注入（靶场搭建 及 Less-1）</a>
         </h2>
 
         <div class="post-meta-container">
@@ -189,14 +189,14 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2025-02-08 17:20:45" itemprop="dateCreated datePublished" datetime="2025-02-08T17:20:45+08:00">2025-02-08</time>
+      <time title="Created: 2025-08-21 22:45:30" itemprop="dateCreated datePublished" datetime="2025-08-21T22:45:30+08:00">2025-08-21</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-02-12 00:00:00" itemprop="dateModified" datetime="2025-02-12T00:00:00+08:00">2025-02-12</time>
+      <time title="Modified: 2025-08-22 22:30:31" itemprop="dateModified" datetime="2025-08-22T22:30:31+08:00">2025-08-22</time>
     </span>
 
   
@@ -209,11 +209,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="静态链接与重定位">静态链接与重定位</h2>
-<p>以下述c代码为例，我们讨论一下重定位的过程
+          <h2 id="搭建sqli-labs靶场">搭建SQLi-Labs靶场</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索 sqli-labs 镜像 (可选)</span></span><br><span class="line">docker search sqli-labs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拉取一个常用的镜像</span></span><br><span class="line">docker pull acgpiano/sqli-labs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行容器 (-p 81:80 表示将容器的80端口映射到宿主机的81端口)</span></span><br><span class="line">docker run -dt --name sqli-labs -p 81:80 acgpiano/sqli-labs</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/02/08/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/#more" rel="contents">
+              <a class="btn" href="/2025/08/21/CTF/sql_1/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -244,7 +244,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/06/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/11/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/cm.png">
@@ -262,7 +262,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/02/06/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/" class="post-title-link" itemprop="url">栈溢出(ret2syscall)</a>
+          <a href="/2025/02/11/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/" class="post-title-link" itemprop="url">链接与重定位</a>
         </h2>
 
         <div class="post-meta-container">
@@ -273,14 +273,98 @@
       </span>
       <span class="post-meta-item-text">Posted on</span>
 
-      <time title="Created: 2025-02-06 20:35:57" itemprop="dateCreated datePublished" datetime="2025-02-06T20:35:57+08:00">2025-02-06</time>
+      <time title="Created: 2025-02-11 17:20:45" itemprop="dateCreated datePublished" datetime="2025-02-11T17:20:45+08:00">2025-02-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-02-07 00:00:00" itemprop="dateModified" datetime="2025-02-07T00:00:00+08:00">2025-02-07</time>
+      <time title="Modified: 2025-02-19 00:00:00" itemprop="dateModified" datetime="2025-02-19T00:00:00+08:00">2025-02-19</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="静态链接与重定位">静态链接与重定位</h2>
+<p>以下述c代码为例，我们讨论一下重定位的过程
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/02/11/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/02/07/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cm.png">
+      <meta itemprop="name" content="CMing-迟明">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CMingの小站">
+      <meta itemprop="description" content="Coding with brush">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/02/07/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/" class="post-title-link" itemprop="url">栈溢出(ret2syscall)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-02-07 20:35:57" itemprop="dateCreated datePublished" datetime="2025-02-07T20:35:57+08:00">2025-02-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-02-08 00:00:00" itemprop="dateModified" datetime="2025-02-08T00:00:00+08:00">2025-02-08</time>
     </span>
 
   
@@ -306,7 +390,7 @@ id="位和64位进行系统调用时的区别">32位和64位进行系统调用�
 target="_blank" rel="noopener" href="https://www.cnblogs.com/tcctw/p/11450449.html">参见博客</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2025/02/06/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/#more" rel="contents">
+              <a class="btn" href="/2025/02/07/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA2/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -457,7 +541,7 @@ target="_blank" rel="noopener" href="https://www.cnblogs.com/tcctw/p/11450449.ht
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-01-25 12:43:49" itemprop="dateModified" datetime="2025-01-25T12:43:49+08:00">2025-01-25</time>
+      <time title="Modified: 2025-02-24 21:35:23" itemprop="dateModified" datetime="2025-02-24T21:35:23+08:00">2025-02-24</time>
     </span>
 
   
@@ -907,90 +991,6 @@ class="math inline">\((0,1)、(2,3)、(4,5) \dots\)</span> 是一组
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024/05/14/ACM/graph/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/03/19/ACM/SegmentTree/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/cm.png">
-      <meta itemprop="name" content="CMing-迟明">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CMingの小站">
-      <meta itemprop="description" content="Coding with brush">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | CMingの小站">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2024/03/19/ACM/SegmentTree/" class="post-title-link" itemprop="url">线段树</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2024-03-19 20:08:00 / Modified: 00:00:00" itemprop="dateCreated datePublished" datetime="2024-03-19T20:08:00+08:00">2024-03-19</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="线段树">线段树</h1>
-<h2 id="基础知识">基础知识</h2>
-<p>以查询区间最大值为例：<br />
-由分治的思想可知：区间 <span class="math inline">\([L,R]\)</span>
-的最大值等于 <span class="math inline">\(\max([L, M], [M + 1,
-R])\)</span><br />
-在区间 <span class="math inline">\([1,n]\)</span> 上建线段树，以区间
-<span class="math inline">\([1, 10]\)</span> 为例，如图：
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024/03/19/ACM/SegmentTree/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>

