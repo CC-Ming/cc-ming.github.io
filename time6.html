@@ -311,13 +311,13 @@
 
                 /* 手机版未激活状态的图片缩小 */
             .item:not(.item--active) .img-container {
-                transform: scale(0.75) !important;
+                transform: scale(0.5) !important;
                 transition: transform 0.8s ease; /* 增加过渡时间和效果 */
             }
 
             /* 修改：扩展激活图像的变换到所有.img，调整translate以保持错开 */
             .item--active .img {
-                transform: scale(1) translate(10px, -5px) !important; /* 统一居中调整 */
+                transform: scale(0.68) translate(-70px, -5px) !important; /* 统一居中调整 */
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); /* 保留阴影效果 */
                 border-color: rgba(255, 215, 0, 0.5); /* 保留边框颜色 */
             }
