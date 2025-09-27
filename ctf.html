@@ -5,19 +5,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Days of ACMers at UJS</title>
+    <title>Days of CTFers at UJS</title>
     <style>
         *{
             padding: 0;
             margin: 0;
         }
+        /* 修复移动端滚动条空白问题 */
+        html, body {
+            overflow-x: hidden; /* 禁止水平滚动 */
+            width: 100%;
+            position: relative;
+        }
         .shell {
             width: 100%;
             position: relative;
             padding: 80px 0 0 0;
-            transition: 0.3s ease 0s;
+            transition: background-image 0.8s ease-in-out;
             background-attachment: fixed;
             background-size: cover;
+            will-change: background-image;
+            transform: translateZ(0);
         }
 
         .shell::before {
@@ -58,9 +66,9 @@
         .content-title {
             font-weight: normal;
             font-size: 56px;
-            margin: -5px 0 0 0;
+            margin: -5px 0 0 0px;
             transition: 0.4s;
-            padding: 0 10px;
+            padding: 0 0;
             box-sizing: border-box;
             color: rgba(255, 255, 255, 0.85);
             position: relative; /* 确保标题有自己的层叠上下文 */
@@ -75,6 +83,7 @@
             line-height: 25px;
             position: relative; /* 确保标题有自己的层叠上下文 */
             /* z-index: 2; 设置比图片更高的层级 */
+            width: 80%; /* 父容器宽度的80% */
         }
 
         .timeline::before {
@@ -91,12 +100,13 @@
             padding: 40px 0;
             opacity: 0.3;
             filter: blur(2px);
-            transition: 0.5s;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
             width: calc(50% - 40px);
             display: flex;
             position: relative;
-            transform: translateY(-10px);
+            transform: translateY(-10px) translateZ(0);
+            will-change: opacity, filter, transform;
         }
 
         .item::before {
@@ -145,7 +155,7 @@
         }
 
         .item--active .content-title{
-            margin: -40px 0 20px 0;
+            margin: -40px 0 20px -20px;
         }
 
         /* 修改：添加图片容器样式，以支持多个图片叠放和错开 */
@@ -154,6 +164,8 @@
             width: 320px; /* 调整为1280/4=320px，保持宽高比 */
             height: 213px; /* 调整为854/4=213px，保持宽高比 */
             cursor: pointer; /* 指示可交互 */
+            will-change: transform;
+            transform: translateZ(0); 
         }
 
         .img {
@@ -162,11 +174,13 @@
             /* 修改：调整为div样式，支持伪元素；移除原img特有属性 */
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
             /* 修改：明确指定过渡属性以增强动画效果，支持位置和变换的平滑过渡 */
-            transition: left 0.65s ease, top 0.65s ease, transform 0.65s ease, box-shadow 0.65s ease;
+            transition: left 0.65s cubic-bezier(0.4, 0, 0.2, 1), top 0.65s cubic-bezier(0.4, 0, 0.2, 1), transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.65s ease;
             position: absolute; /* 修改：使用绝对定位实现叠放 */
             top: 0;
             left: 0;
             z-index: 1; /* 默认层级 */
+            will-change: transform, left, top;
+            transform: translateZ(0); /* 强制GPU加速 */
         }
 
         /* 修改：为内层img添加自适应样式 */
@@ -249,14 +263,14 @@
 
         /* 修改：扩展激活状态的图片样式到所有.img，并根据data-index调整translate以保持错开 */
         .item--active:nth-child(odd) .img {
-            transform: scale(1.5) translate(-45px, -25px); 
+            transform: scale(1.5) translate(-45px, -25px) translateZ(0); 
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 215, 0, 0.5);
         }
 
 
         .item--active:nth-child(even) .img {
-            transform: scale(1.5) translate(45px, -25px); 
+            transform: scale(1.5) translate(45px, -25px) translateZ(0); 
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 215, 0, 0.5);
         }
@@ -305,19 +319,19 @@
 
             /* 确保激活状态的图片保持正常大小 */
             .item--active .img-container {
-                transform: scale(1);
-                transition: transform 0.8s ease; /* 增加过渡时间和效果 */
+                transform: scale(1) translateZ(0);
+                transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* 增加过渡时间和效果 */
             }
 
                 /* 手机版未激活状态的图片缩小 */
             .item:not(.item--active) .img-container {
-                transform: scale(0.5) !important;
-                transition: transform 0.8s ease; /* 增加过渡时间和效果 */
+                transform: scale(0.5) translateZ(0) !important;
+                transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* 增加过渡时间和效果 */
             }
 
             /* 修改：扩展激活图像的变换到所有.img，调整translate以保持错开 */
             .item--active .img {
-                transform: scale(0.68) translate(-70px, -5px) !important; /* 统一居中调整 */
+                transform: scale(0.68) translate(-70px, -5px) translateZ(0) !important; /* 统一居中调整 */
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); /* 保留阴影效果 */
                 border-color: rgba(255, 215, 0, 0.5); /* 保留边框颜色 */
             }
@@ -342,6 +356,10 @@
                 left: 40px !important; /* 统一正偏移 */
                 top: 40px;
             }
+
+            .content-title {
+                font-size: 50px !important;
+            }
             /* 修改结束 */
         }
 
@@ -354,111 +372,89 @@
 </head>
 
 <body>
+    <div id="bg"></div>
     <div class="shell" id="shell">
         <div class="header">
-            <h2 class="title">Days of ACMers at UJS</h2>
-            <h3 class="subtitle">扫一遍，交一发，拿一血</h3>
+            <h2 class="title">Days of CTFers at UJS</h2>
+            <h3 class="subtitle">Flag</h3>
         </div>
         
         <div class="timeline">
 
-            <div class="item" data-text="百度之星">
+
+            <div class="item" data-text="">
+                <div class="content">
+                    <div class="img-container">
+                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/图片3.jpg" alt=""></div>
+              
+                    </div>
+                    <h2 class="content-title">2021 08</h2>
+                    <p class="content-desc">
+                    </p>
+                </div>
+            </div>
+
+            <div class="item" data-text="">
                <div class="content">
                    <!-- 修改：将单个img改为img-container容器，支持多个img -->
                    <div class="img-container">
                        <!-- 修改：将img包裹成div以支持蒙层 -->
-                       <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/百度之星.jpg" alt=""></div>
+                       <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/图片1.jpg" alt=""></div>
                        <!-- 示例：添加更多图片，按需复制 -->
                        <!-- <div class="img" data-index="1"><img src="./img/another1.jpg" alt=""></div> -->
                        <!-- <div class="img" data-index="2"><img src="./img/another2.jpg" alt=""></div> -->
                    </div>
-                   <h2 class="content-title">2023 12/31</h2>
+                   <h2 class="content-title">2023</h2>
                    <p class="content-desc">
-                       地点：北京，九华山庄<br>某佬入学前的暑假入围了，决赛乱入高中组，只能打铁（？
                    </p>
                </div>
            </div>
 
-            <div class="item" data-text="武汉邀请赛">
+            <div class="item" data-text="">
                 <div class="content">
                     <div class="img-container">
-                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24武汉邀请赛2.jpg" alt=""></div>
-                        <div class="img" data-index="1"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24武汉邀请赛3.jpg" alt=""></div>
-                        <div class="img" data-index="2"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/武汉邀请赛.jpg" alt=""></div>
-                        <div class="img" data-index="3"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24武汉邀请赛4.jpg" alt=""></div>
+                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/图片2.jpg" alt=""></div>
                     </div>
-                    <h2 class="content-title">2024 05/01</h2>
+                    <h2 class="content-title">2023 03/06</h2>
                     <p class="content-desc">
-                        <br>地点：武汉大学<br>银牌，但史上第一次首A！
                     </p>
                 </div>
             </div>
 
-            <div class="item" data-text="JSCPC">
+
+            <div class="item" data-text="">
                 <div class="content">
                     <div class="img-container">
-                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/2024JSCPC-2.jpg" alt=""></div>
-                        <div class="img" data-index="1"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/2024JSCPC.jpg" alt=""></div>
+                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/图片5.jpg" alt=""></div>
                     </div>
-                    <h2 class="content-title">2024 05/12</h2>
+                    <h2 class="content-title">2023 07</h2>
                     <p class="content-desc">
-                        地点：南京大学仙林校区<br>战绩：三队银牌，两队铜牌，历史新高！
                     </p>
                 </div>
             </div>
 
-            <div class="item" data-text="ICPC网络赛">
+
+            <div class="item" data-text="">
                 <div class="content">
                     <div class="img-container">
-                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24网络赛.jpg" alt=""></div>
+                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/图片4.jpg" alt=""></div>
                     </div>
-                    <h2 class="content-title">2024 09/15</h2>
+                    <h2 class="content-title">2024 07/04</h2>
                     <p class="content-desc">
-                        地点：江苏大学计算机学院<br>红牛叠高高（bushi<br>最终校排82名！
+                      
                     </p>
                 </div>
             </div>
 
-            <div class="item" data-text="ICPC南京站">
-                <div class="content">
-                    <div class="img-container">
-                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/南京站49-1.jpg" alt=""></div>
-                    </div>
-                    <h2 class="content-title">2024 11/03</h2>
-                    <p class="content-desc">
-                        地点：南京航空航天大学<br>铜牌
-                    </p>
-                </div>
-            </div>
 
-            <div class="item" data-text="ICPC杭州站">
-                <div class="content">
-                    <div class="img-container">
-                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24杭州站.jpg" alt=""></div>
-                        <div class="img" data-index="1"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24杭州站2.jpg" alt=""></div>
-                        <div class="img" data-index="2"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24杭州站3.jpg" alt=""></div>
-                        <div class="img" data-index="3"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/24杭州站4.jpg" alt=""></div>
-                    </div>
-                    <h2 class="content-title">2024 11/10</h2>
-                    <p class="content-desc">
-                        <br>地点：杭州师范大学<br>铜牌
-                    </p>
-                </div>
-            </div>
 
-            <div class="item" data-text="ICPC昆明站">
+            <div class="item" data-text="">
                 <div class="content">
                     <div class="img-container">
-                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/昆明站.jpg" alt=""></div>
-                        <div class="img" data-index="1"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/49届昆明站.jpg" alt=""></div>
-                        <div class="img" data-index="2"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/49届昆明站-2.jpg" alt=""></div>
-                        <div class="img" data-index="3"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/49届昆明站-3.jpg" alt=""></div>
-                        <div class="img" data-index="4"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/49届昆明站-4.jpg" alt=""></div>
+                        <div class="img" data-index="0"><img src="https://gcore.jsdelivr.net/gh/CC-Ming/picture/imgs/图片6.jpg" alt=""></div>
                     </div>
-                    <h2 class="content-title">2024 12/01</h2>
+                    <h2 class="content-title">2024 11</h2>
                     <p class="content-desc">
-                        <br>
-                        地点：云南大学<br>史上第一枚金牌！
                     </p>
                 </div>
             </div>
@@ -479,6 +475,7 @@
         </footer>
         
     </div>
+    
     
 
 
@@ -508,12 +505,16 @@
                 );
 
                 var itemLength = selectors.item.length;
+                var scrollTimeout;
 
                 $(window).scroll(function(){
-                    var max, min;
-                    var windowHeight = $(window).height();
-                    // 获取当前滚动条的位置
-                    var pos = $(this).scrollTop();
+                    // 添加防抖动处理
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        var max, min;
+                        var windowHeight = $(window).height();
+                        // 获取当前滚动条的位置
+                        var pos = $(window).scrollTop();
                     selectors.item.each(function(i) {
                         // 获取当前item距离文档顶部的偏移量
                         min = $(this).offset().top;
@@ -521,20 +522,7 @@
                         max = $(this).height() + $(this).offset().top;
                         var that = $(this);
 
-                        // if (i == itemLength - 2 && pos > min + $(this).height()/2){
-                        //     selectors.item.removeClass(selectors.activeClass);
-                        //     selectors.id.css(
-                        //         "background-image",
-                        //         "url(" + 
-                        //         selectors.item.last()
-                        //             .find(selectors.img)
-                        //             .attr("src") +
-                        //         ")"
-                        //     );
-                        //     selectors.item.last().addClass(selectors.activeClass);
-                        // }
-
-                        if(pos >= min - windowHeight / 2){
+                        if(pos + windowHeight / 2 >= min){
                             selectors.id.css(
                                 /* 修改：更新为find(selectors.img + " img").attr("src")，取第一个img的src作为背景 */
                                 "background-image",
@@ -548,6 +536,7 @@
                             $(this).addClass(selectors.activeClass);
                         }
                     });
+                    }, 16);
                 });
 
                 // 修改：为每个img-container添加点击事件，通过更新data-index实现图片轮换，并利用CSS transition添加位置平滑动画效果

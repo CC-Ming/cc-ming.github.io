@@ -11,13 +11,21 @@
             padding: 0;
             margin: 0;
         }
+        /* 修复移动端滚动条空白问题 */
+        html, body {
+            overflow-x: hidden; /* 禁止水平滚动 */
+            width: 100%;
+            position: relative;
+        }
         .shell {
             width: 100%;
             position: relative;
             padding: 80px 0 0 0;
-            transition: 0.3s ease 0s;
+            transition: background-image 0.8s ease-in-out;
             background-attachment: fixed;
             background-size: cover;
+            will-change: background-image;
+            transform: translateZ(0);
         }
 
         .shell::before {
@@ -58,9 +66,9 @@
         .content-title {
             font-weight: normal;
             font-size: 56px;
-            margin: -5px 0 0 0;
+            margin: -5px 0 0 0px;
             transition: 0.4s;
-            padding: 0 10px;
+            padding: 0 0;
             box-sizing: border-box;
             color: rgba(255, 255, 255, 0.85);
             position: relative; /* 确保标题有自己的层叠上下文 */
@@ -75,6 +83,7 @@
             line-height: 25px;
             position: relative; /* 确保标题有自己的层叠上下文 */
             /* z-index: 2; 设置比图片更高的层级 */
+            width: 80%; /* 父容器宽度的80% */
         }
 
         .timeline::before {
@@ -91,12 +100,13 @@
             padding: 40px 0;
             opacity: 0.3;
             filter: blur(2px);
-            transition: 0.5s;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             box-sizing: border-box;
             width: calc(50% - 40px);
             display: flex;
             position: relative;
-            transform: translateY(-10px);
+            transform: translateY(-10px) translateZ(0);
+            will-change: opacity, filter, transform;
         }
 
         .item::before {
@@ -145,7 +155,7 @@
         }
 
         .item--active .content-title{
-            margin: -40px 0 20px 0;
+            margin: -40px 0 20px -20px;
         }
 
         /* 修改：添加图片容器样式，以支持多个图片叠放和错开 */
@@ -154,6 +164,8 @@
             width: 320px; /* 调整为1280/4=320px，保持宽高比 */
             height: 213px; /* 调整为854/4=213px，保持宽高比 */
             cursor: pointer; /* 指示可交互 */
+            will-change: transform;
+            transform: translateZ(0); 
         }
 
         .img {
@@ -161,20 +173,21 @@
             height: 100%;
             /* 修改：调整为div样式，支持伪元素；移除原img特有属性 */
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
-            transform: scale(1) translate3d(0, 0, 0);
             /* 修改：明确指定过渡属性以增强动画效果，支持位置和变换的平滑过渡 */
-            transition: all 0.65s linear;
+            transition: left 0.65s cubic-bezier(0.4, 0, 0.2, 1), top 0.65s cubic-bezier(0.4, 0, 0.2, 1), transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.65s ease;
             position: absolute; /* 修改：使用绝对定位实现叠放 */
             top: 0;
             left: 0;
             z-index: 1; /* 默认层级 */
+            will-change: transform, left, top;
+            transform: translateZ(0); /* 强制GPU加速 */
         }
 
         /* 修改：为内层img添加自适应样式 */
         .img img {
             width: 100%;
             height: 100%;
-/*            object-fit: cover; !* 裁剪图片以适应容器 *!*/
+            object-fit: cover; /* 裁剪图片以适应容器 */
             display: block;
         }
 
@@ -250,14 +263,14 @@
 
         /* 修改：扩展激活状态的图片样式到所有.img，并根据data-index调整translate以保持错开 */
         .item--active:nth-child(odd) .img {
-            transform: scale(1.5) translate(-45px, -25px);
+            transform: scale(1.5) translate(-45px, -25px) translateZ(0); 
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 215, 0, 0.5);
         }
 
 
         .item--active:nth-child(even) .img {
-            transform: scale(1.5) translate(45px, -25px);
+            transform: scale(1.5) translate(45px, -25px) translateZ(0); 
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
             border-color: rgba(255, 215, 0, 0.5);
         }
@@ -306,19 +319,19 @@
 
             /* 确保激活状态的图片保持正常大小 */
             .item--active .img-container {
-                transform: scale(1);
-                transition: transform 0.8s ease; /* 增加过渡时间和效果 */
+                transform: scale(1) translateZ(0);
+                transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* 增加过渡时间和效果 */
             }
 
                 /* 手机版未激活状态的图片缩小 */
             .item:not(.item--active) .img-container {
-                transform: scale(0.5) !important;
-                transition: transform 0.8s ease; /* 增加过渡时间和效果 */
+                transform: scale(0.5) translateZ(0) !important;
+                transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); /* 增加过渡时间和效果 */
             }
 
             /* 修改：扩展激活图像的变换到所有.img，调整translate以保持错开 */
             .item--active .img {
-                transform: scale(0.68) translate3d(-70px, -5px, 0) !important; /* 统一居中调整 */
+                transform: scale(0.68) translate(-70px, -5px) translateZ(0) !important; /* 统一居中调整 */
                 box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); /* 保留阴影效果 */
                 border-color: rgba(255, 215, 0, 0.5); /* 保留边框颜色 */
             }
@@ -342,6 +355,10 @@
             .item .img[data-index="4"] {
                 left: 40px !important; /* 统一正偏移 */
                 top: 40px;
+            }
+
+            .content-title {
+                font-size: 50px !important;
             }
             /* 修改结束 */
         }
@@ -482,7 +499,7 @@
         
     </div>
     
-
+    
 
 
 
@@ -497,13 +514,13 @@
                     activeClass: "item--active",
                     img: ".img"
                 };
-
+            
                 /* 修改：修正原代码错误，应为selectors.item.eq(0)而非selectors.img.eq(0) */
                 selectors.item.eq(0).addClass(selectors.activeClass);
                 selectors.id.css(
                     /* 修改：更新为find(".img img").attr("src")，以适应div包裹结构 */
                     "background-image",
-                    "url(" +
+                    "url(" + 
                     selectors.item.first()
                         .find(selectors.img + " img")
                         .attr("src")+
@@ -511,118 +528,38 @@
                 );
 
                 var itemLength = selectors.item.length;
-              var max, min;
-              let arr = []
+                var scrollTimeout;
 
-              selectors.item.each(function(i) {
-                // 获取当前item距离文档顶部的偏移量
-                min = $(this).offset().top;
-                // 计算当前item的底部位置（自身高度 + 顶部偏移）
-                max = $(this).height() + $(this).offset().top;
-                var that = $(this);
-                arr.push ({
-                  min,
-                  max,
-                  index: i,
-                  that: $(this),
-                  active: false
-                })
-
-                // if (i == itemLength - 2 && pos > min + $(this).height()/2){
-                //     selectors.item.removeClass(selectors.activeClass);
-                //     selectors.id.css(
-                //         "background-image",
-                //         "url(" +
-                //         selectors.item.last()
-                //             .find(selectors.img)
-                //             .attr("src") +
-                //         ")"
-                //     );
-                //     selectors.item.last().addClass(selectors.activeClass);
-                // }
-
-               /*  if(pos >= min - windowHeight / 2){
-                  selectors.id.css(
-                    /!* 修改：更新为find(selectors.img + " img").attr("src")，取第一个img的src作为背景 *!/
-                    "background-image",
-                    "url(" +
-                    $(this)
-                      .find(selectors.img + " img")
-                      .attr("src") +
-                    ")"
-                  );
-                  selectors.item.removeClass(selectors.activeClass);
-                  $(this).addClass(selectors.activeClass);
-                } */
-              });
-              var windowHeight = $(window).height();
                 $(window).scroll(function(){
-/*                     var max, min; */
-
-                    // 获取当前滚动条的位置
-                    var pos = $(this).scrollTop();
-                  for(let i = 0; i < arr.length; i++) {
-                    let {min, max, that, active} = arr[i]
-                    if(that.hasClass(selectors.activeClass)) {
-                      continue;
-                    }
-
-                    if(pos >= min - windowHeight / 2){
-                      selectors.id.css(
-                        /* 修改：更新为find(selectors.img + " img").attr("src")，取第一个img的src作为背景 */
-                        "background-image",
-                        "url(" +
-                        that
-                          .find(selectors.img + " img")
-                          .attr("src") +
-                        ")"
-                      );
-                      if(!that.hasClass(selectors.activeClass)) {
-                        selectors.item.removeClass(selectors.activeClass);
-                        that.addClass(selectors.activeClass);
-/*                         arr = arr.map((item, index) => {
-                          if(index !== i) {
-                            item.active = false
-                          }
-                          return item
-                        }) */
-                      }
-                    }
-                  }
-/*                     selectors.item.each(function(i) {
+                    // 添加防抖动处理
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        var max, min;
+                        var windowHeight = $(window).height();
+                        // 获取当前滚动条的位置
+                        var pos = $(window).scrollTop();
+                    selectors.item.each(function(i) {
                         // 获取当前item距离文档顶部的偏移量
                         min = $(this).offset().top;
                         // 计算当前item的底部位置（自身高度 + 顶部偏移）
                         max = $(this).height() + $(this).offset().top;
                         var that = $(this);
 
-                        // if (i == itemLength - 2 && pos > min + $(this).height()/2){
-                        //     selectors.item.removeClass(selectors.activeClass);
-                        //     selectors.id.css(
-                        //         "background-image",
-                        //         "url(" +
-                        //         selectors.item.last()
-                        //             .find(selectors.img)
-                        //             .attr("src") +
-                        //         ")"
-                        //     );
-                        //     selectors.item.last().addClass(selectors.activeClass);
-                        // }
-
-                        if(pos >= min - windowHeight / 2){
+                        if(pos + windowHeight / 2 >= min){
                             selectors.id.css(
-                                /!* 修改：更新为find(selectors.img + " img").attr("src")，取第一个img的src作为背景 *!/
+                                /* 修改：更新为find(selectors.img + " img").attr("src")，取第一个img的src作为背景 */
                                 "background-image",
-                                "url(" +
+                                "url(" + 
                                 $(this)
                                     .find(selectors.img + " img")
-                                    .attr("src") +
+                                    .attr("src") + 
                                 ")"
                             );
                             selectors.item.removeClass(selectors.activeClass);
                             $(this).addClass(selectors.activeClass);
                         }
-                    }); */
+                    });
+                    }, 16);
                 });
 
                 // 修改：为每个img-container添加点击事件，通过更新data-index实现图片轮换，并利用CSS transition添加位置平滑动画效果
